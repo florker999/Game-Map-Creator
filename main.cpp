@@ -644,30 +644,28 @@ void Creator::setBlockade()
 		blockades = new Tile[++blockadesCounter];
 		blockades->init(tiles[mouseTilePos].zwrocPoz());
 		blockades->zmienTeksture(mag.zwroc_t(blockadeType));
-		tiles[mouseTilePos].zmienDostep(blockadeType);
 	}
 	else
 	{
 		int blockadeIndex = findBlockadeIndex ( mouseTilePos );
-		if ( blockadeIndex > -1 )
+		if ( blockadeIndex == -1 )
 		{
-			Tile* n_blok = new Tile[++blockadesCounter];
-			int a;
-			for (a = 0; a < blockadesCounter - 1; a++)
-				n_blok[a] = blockades[a];
-			n_blok[a].init(tiles[mouseTilePos].zwrocPoz());
-			n_blok[a].zmienTeksture(mag.zwroc_t(blockadeType));
+			Tile* newBlockades = new Tile[++blockadesCounter];
+			for (int a = 0; a < blockadesCounter - 1; a++)
+				newBlockades[a] = blockades[a];
+			newBlockades[blockadesCounter - 1].init(tiles[mouseTilePos].zwrocPoz());
+			newBlockades[blockadesCounter - 1].zmienTeksture(mag.zwroc_t(blockadeType));
+
 			delete[] blockades;
-			blockades = n_blok;
-			tiles[mouseTilePos].zmienDostep(blockadeType);
+			blockades = newBlockades;
 		}
 		else
 		{
 			blockades[blockadeIndex].zmienBlok(blockadeType);
 			blockades[blockadeIndex].zmienTeksture(mag.zwroc_t(blockadeType));
-			tiles[mouseTilePos].zmienDostep(blockadeType);
 		}
 	}
+	tiles[mouseTilePos].zmienDostep(blockadeType);
 }
 
 void Creator::chooseTool(sf::Vector2f mouseCoordinates)
