@@ -36,7 +36,7 @@
     <ClCompile Include="Item.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Tskrzynia.cpp">
+    <ClCompile Include="Chest.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -68,7 +68,7 @@
     <ClInclude Include="Item.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Tskrzynia.h">
+    <ClInclude Include="Chest.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="typy.h">

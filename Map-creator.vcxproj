@@ -142,7 +142,7 @@
     <ClCompile Include="Tokno_skrzyni.cpp" />
     <ClCompile Include="Tpodloga.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="Tskrzynia.cpp" />
+    <ClCompile Include="Chest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Fportal.h" />
@@ -153,7 +153,7 @@
     <ClInclude Include="Tokno_skrzyni.h" />
     <ClInclude Include="Tpodloga.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="Tskrzynia.h" />
+    <ClInclude Include="Chest.h" />
     <ClInclude Include="typy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

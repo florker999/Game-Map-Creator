@@ -6,7 +6,7 @@
 
 #include "typy.h"
 #include "Tmagazyn.h"
-#include "Tskrzynia.h"
+#include "Chest.h"
 #include "Tpodloga.h"
 #include "Tmikstura.h"
 #include "global.h"
@@ -51,7 +51,7 @@ public:
 	Item* currentTool;
 
 	// chosen chest pointer
-	Tskrzynia* currentChest;
+	Chest* currentChest;
 
 	// tiles
 	Tpodloga tiles[tilesCounter];	
@@ -112,15 +112,15 @@ Creator::Creator() :
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 39), 0) },		// blockade
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1055, 39), 1) },		// access
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 78), 1) },		// grass
-		{ new Tskrzynia(typ_rz::skrzynia, sf::Vector2f(1055, 78)) },	// chest
-		{ new Tskrzynia(typ_rz::duza_skrzynia, sf::Vector2f(1016, 117)) },// big chest
+		{ new Chest(typ_rz::skrzynia, sf::Vector2f(1055, 78)) },	// chest
+		{ new Chest(typ_rz::duza_skrzynia, sf::Vector2f(1016, 117)) },// big chest
 		{ new Tpodloga(typ_rz::woda, sf::Vector2f(1016, 156), 0) },		// water
 		{ new Tpodloga(typ_rz::cobel, sf::Vector2f(1055, 156)) },		// cobbelstone
-		{ new Tskrzynia(typ_rz::drzwi_drew, sf::Vector2f(1016, 234)) },	// wooden door
+		{ new Chest(typ_rz::drzwi_drew, sf::Vector2f(1016, 234)) },	// wooden door
 		{ new Tmikstura(typ_rz::mikstura_zycia, sf::Vector2f(1055, 195), 1)}, // life mixture
 		{ new Tpodloga(typ_rz::podloze_drewniane, sf::Vector2f(1055, 234))}, // wooden floor
-		{ new Tskrzynia(typ_rz::witraz, sf::Vector2f(1016, 273)) },		// stained glass
-		{ new Tskrzynia(typ_rz::pochodnia, sf::Vector2f(1055, 273))}	// fire torch
+		{ new Chest(typ_rz::witraz, sf::Vector2f(1016, 273)) },		// stained glass
+		{ new Chest(typ_rz::pochodnia, sf::Vector2f(1055, 273))}	// fire torch
 	};
 	tools = tymW;
 
@@ -368,7 +368,7 @@ void Creator::useObject ( )
 	switch ( action )
 	{
 	case typ_akc::otw_skrz:
-		currentChest = dynamic_cast<Tskrzynia*>( &tiles[ mouseTilePos ].zwrocRzecz ( ) );
+		currentChest = dynamic_cast<Chest*>( &tiles[ mouseTilePos ].zwrocRzecz ( ) );
 		break;
 
 	case typ_akc::zamk_skrz:

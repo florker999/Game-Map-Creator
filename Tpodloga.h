@@ -2,7 +2,7 @@
 #define TPODLOGA_H
 
 #include "Item.h"
-#include "Tskrzynia.h"
+#include "Chest.h"
 
 class Tpodloga :
     public Item

@@ -1,12 +1,12 @@
-#ifndef TSKRZYNIA_H
-#define TSKRZYNIA_H
+#ifndef CHEST_H
+#define CHEST_H
 
 #include "Item.h"
 #include "typy.h"
 #include "global.h"
 #include "Tokno_skrzyni.h"
 
-class Tskrzynia : public Item
+class Chest : public Item
 {
 
 private:
@@ -18,9 +18,9 @@ private:
 
 public:
     
-    Tskrzynia(const Tskrzynia& inna);
-    Tskrzynia(typ_rz typ, sf::Vector2f p, typ_mat m = typ_mat::drewno, int ilosc = 0, Item* wyp = nullptr);
-    ~Tskrzynia();
+    Chest(const Chest& inna);
+    Chest(typ_rz typ, sf::Vector2f p, typ_mat m = typ_mat::drewno, int ilosc = 0, Item* wyp = nullptr);
+    ~Chest();
 
     Item* stworzWg() const override;
     Item* wyjmijRzecz(sf::Vector2f pM);

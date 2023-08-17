@@ -1,35 +1,35 @@
-#include "Tskrzynia.h"
+#include "Chest.h"
 #include <iostream>
 
-Tskrzynia::Tskrzynia(const Tskrzynia& inna) : Item(inna)
+Chest::Chest(const Chest& inna) : Item(inna)
 {
 	zawartosc = new Tokno_skrzyni();
 	material = inna.material;
 	stan = inna.stan;
 }
 
-Tskrzynia::Tskrzynia(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Item* wyp) :
+Chest::Chest(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Item* wyp) :
 	Item(typ, p), material(m), stan(), zawartosc(new Tokno_skrzyni(wyp, ilosc))
 {
 }
 
-Tskrzynia::~Tskrzynia()
+Chest::~Chest()
 {
 	if (zawartosc)
 		delete zawartosc;
 }
 
-Item* Tskrzynia::stworzWg() const
+Item* Chest::stworzWg() const
 {
-	return new Tskrzynia(*this);
+	return new Chest(*this);
 }
 
-Item* Tskrzynia::wyjmijRzecz(sf::Vector2f pM)
+Item* Chest::wyjmijRzecz(sf::Vector2f pM)
 {
 	return zawartosc->wyjmijRzecz(pM);
 }
 
-void Tskrzynia::dodajRzecz(const Item& nowa)
+void Chest::dodajRzecz(const Item& nowa)
 {
 	if (!zawartosc)
 		zawartosc = new Tokno_skrzyni();
@@ -37,12 +37,12 @@ void Tskrzynia::dodajRzecz(const Item& nowa)
 	zawartosc->dodajRzecz(nowa);
 }
 
-void Tskrzynia::pokazWnetrze(sf::RenderWindow& okno)
+void Chest::pokazWnetrze(sf::RenderWindow& okno)
 {
 	zawartosc->pokazWnetrze(okno);
 }
 
-typ_akc Tskrzynia::akcja()
+typ_akc Chest::akcja()
 {
 	if (stan == 0)
 	{
