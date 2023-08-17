@@ -275,7 +275,7 @@ void Creator::update()
 		}
 
 		// setting up a blockade
-		else if (isBlockade == true)
+		else if ( isBlockade == true && mouseCoordinates.x < 1014 )
 		{
 			setBlockade();
 		}
