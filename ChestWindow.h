@@ -1,12 +1,12 @@
-#ifndef TOKNO_SKRZYNI_H
-#define TOKNO_SKRZYNI_H
+#ifndef CHEST_WINDOW_H
+#define CHEST_WINDOW_H
 
 #include "Item.h"
 #include "typy.h"
 #include "global.h"
 #include "SFML/Graphics.hpp"
 
-class Tokno_skrzyni :
+class ChestWindow :
     public Item
 {
 
@@ -17,10 +17,10 @@ private:
 
 public:
 
-    Tokno_skrzyni() : zawartosc(nullptr), ilosc_rzeczy() {}
+    ChestWindow() : zawartosc(nullptr), ilosc_rzeczy() {}
 
-    Tokno_skrzyni(Item* nZaw, int ilosc); // argument pierwszy
-    ~Tokno_skrzyni();
+    ChestWindow(Item* nZaw, int ilosc); // argument pierwszy
+    ~ChestWindow();
 
     int zwrocIloscRz() const { return ilosc_rzeczy; }
 

@@ -4,14 +4,14 @@
 #include "Item.h"
 #include "typy.h"
 #include "global.h"
-#include "Tokno_skrzyni.h"
+#include "ChestWindow.h"
 
 class Chest : public Item
 {
 
 private:
 
-    Tokno_skrzyni* zawartosc;
+    ChestWindow* zawartosc;
     typ_mat material;
 
     bool stan; // 0 - zamknieta, 1 - otwarta

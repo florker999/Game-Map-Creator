@@ -1,9 +1,9 @@
-#include "Tokno_skrzyni.h"
+#include "ChestWindow.h"
 #include "SFML/Graphics.hpp"
 
-sf::Sprite Tokno_skrzyni::okienko = sf::Sprite(mag.zwroc_t(typ_dod::wSkrz));
+sf::Sprite ChestWindow::okienko = sf::Sprite(mag.zwroc_t(typ_dod::wSkrz));
 
-Tokno_skrzyni::Tokno_skrzyni(Item* nZaw, int ilosc)
+ChestWindow::ChestWindow(Item* nZaw, int ilosc)
 {
 	if (ilosc == 0)
 	{
@@ -20,13 +20,13 @@ Tokno_skrzyni::Tokno_skrzyni(Item* nZaw, int ilosc)
 	}
 }
 
-Tokno_skrzyni::~Tokno_skrzyni()
+ChestWindow::~ChestWindow()
 {
 	if (zawartosc)
 		delete[] zawartosc;
 }
 
-void Tokno_skrzyni::dodajRzecz(const Item& nowa)
+void ChestWindow::dodajRzecz(const Item& nowa)
 {
 	if (zawartosc == nullptr)
 		zawartosc = new Item * [9]{};
@@ -61,7 +61,7 @@ void Tokno_skrzyni::dodajRzecz(const Item& nowa)
 
 }
 
-void Tokno_skrzyni::otwarcie(sf::Vector2f start)
+void ChestWindow::otwarcie(sf::Vector2f start)
 {
 	okienko.setPosition(start);
 	if (ilosc_rzeczy)
@@ -82,7 +82,7 @@ void Tokno_skrzyni::otwarcie(sf::Vector2f start)
 	}
 }
 
-void Tokno_skrzyni::pokazWnetrze(sf::RenderWindow& okno)
+void ChestWindow::pokazWnetrze(sf::RenderWindow& okno)
 {
 	okno.draw(okienko);
 
@@ -96,14 +96,14 @@ void Tokno_skrzyni::pokazWnetrze(sf::RenderWindow& okno)
 	}
 }
 
-bool Tokno_skrzyni::czyMysz(sf::Vector2f pM)
+bool ChestWindow::czyMysz(sf::Vector2f pM)
 {
 	if (okienko.getGlobalBounds().contains(pM))
 		 return true;
 	else return false;
 }
 
-Item* Tokno_skrzyni::wyjmijRzecz(sf::Vector2f pM)
+Item* ChestWindow::wyjmijRzecz(sf::Vector2f pM)
 {
 	if (ilosc_rzeczy == 0)
 		return nullptr;

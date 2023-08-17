@@ -3,13 +3,13 @@
 
 Chest::Chest(const Chest& inna) : Item(inna)
 {
-	zawartosc = new Tokno_skrzyni();
+	zawartosc = new ChestWindow();
 	material = inna.material;
 	stan = inna.stan;
 }
 
 Chest::Chest(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Item* wyp) :
-	Item(typ, p), material(m), stan(), zawartosc(new Tokno_skrzyni(wyp, ilosc))
+	Item(typ, p), material(m), stan(), zawartosc(new ChestWindow(wyp, ilosc))
 {
 }
 
@@ -32,7 +32,7 @@ Item* Chest::wyjmijRzecz(sf::Vector2f pM)
 void Chest::dodajRzecz(const Item& nowa)
 {
 	if (!zawartosc)
-		zawartosc = new Tokno_skrzyni();
+		zawartosc = new ChestWindow();
 
 	zawartosc->dodajRzecz(nowa);
 }
