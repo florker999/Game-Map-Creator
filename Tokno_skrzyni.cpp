@@ -3,7 +3,7 @@
 
 sf::Sprite Tokno_skrzyni::okienko = sf::Sprite(mag.zwroc_t(typ_dod::wSkrz));
 
-Tokno_skrzyni::Tokno_skrzyni(Trzecz* nZaw, int ilosc)
+Tokno_skrzyni::Tokno_skrzyni(Item* nZaw, int ilosc)
 {
 	if (ilosc == 0)
 	{
@@ -14,7 +14,7 @@ Tokno_skrzyni::Tokno_skrzyni(Trzecz* nZaw, int ilosc)
 	{
 		ilosc_rzeczy = ilosc;
 
-		zawartosc = new Trzecz * [9]{};
+		zawartosc = new Item * [9]{};
 		for (int a = 0; a < 9; a++, nZaw++)
 			zawartosc[a] = nZaw;
 	}
@@ -26,10 +26,10 @@ Tokno_skrzyni::~Tokno_skrzyni()
 		delete[] zawartosc;
 }
 
-void Tokno_skrzyni::dodajRzecz(const Trzecz& nowa)
+void Tokno_skrzyni::dodajRzecz(const Item& nowa)
 {
 	if (zawartosc == nullptr)
-		zawartosc = new Trzecz * [9]{};
+		zawartosc = new Item * [9]{};
 
 	sf::Vector2f mscRz = okienko.getPosition();
 	mscRz.y += 39;		
@@ -103,12 +103,12 @@ bool Tokno_skrzyni::czyMysz(sf::Vector2f pM)
 	else return false;
 }
 
-Trzecz* Tokno_skrzyni::wyjmijRzecz(sf::Vector2f pM)
+Item* Tokno_skrzyni::wyjmijRzecz(sf::Vector2f pM)
 {
 	if (ilosc_rzeczy == 0)
 		return nullptr;
 
-	Trzecz* wyjeta = nullptr;
+	Item* wyjeta = nullptr;
 	for (int a = 0; a < 9; a++)
 	{
 		if (zawartosc[a] && zawartosc[a]->czyMysz(pM))

@@ -45,10 +45,10 @@ public:
 	sf::RectangleShape wall;
 	
 	// tools container
-	std::vector<Trzecz*> tools;
+	std::vector<Item*> tools;
 
 	// chosen tool pointer
-	Trzecz* currentTool;
+	Item* currentTool;
 
 	// chosen chest pointer
 	Tskrzynia* currentChest;
@@ -107,7 +107,7 @@ Creator::Creator() :
 {
 
 	// setting the tools/floors/objects to take
-	std::vector<Trzecz*> tymW =
+	std::vector<Item*> tymW =
 	{
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 39), 0) },		// blockade
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1055, 39), 1) },		// access
@@ -341,7 +341,7 @@ void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 	}
 	else				// otherwise a tool will be removed from the chest
 	{
-		if ( Trzecz* wsk = currentChest->wyjmijRzecz ( mouseCoordinates ) )
+		if ( Item* wsk = currentChest->wyjmijRzecz ( mouseCoordinates ) )
 		{
 			delete currentTool;
 			currentTool = wsk;

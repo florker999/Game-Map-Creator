@@ -1,11 +1,11 @@
-#ifndef TRZECZ_H
-#define TRZECZ_H
+#ifndef ITEM_H
+#define ITEM_H
 
 #include "SFML/Graphics.hpp"
 #include "typy.h"
 #include <iostream>
 
-class Trzecz
+class Item
 {
 
 private:
@@ -15,20 +15,20 @@ private:
 	bool dostep;
 
 public:
-	Trzecz() : dostep(0), Trz(typ_rz::pusty) {};
+	Item() : dostep(0), Trz(typ_rz::pusty) {};
 
-	Trzecz(const Trzecz& rz) = default;
-	Trzecz(Trzecz&& rz) = default;
+	Item(const Item& rz) = default;
+	Item(Item&& rz) = default;
 
 	// konstruktor, (pozycja != 0,0)
-	Trzecz(typ_rz typ, sf::Vector2f p, bool d = 0);
+	Item(typ_rz typ, sf::Vector2f p, bool d = 0);
 
 	// konstrukcja obiektu typu polimorficznego
-	virtual Trzecz* stworzWg() const { return nullptr; }// zmienic potem na fukncje 
+	virtual Item* stworzWg() const { return nullptr; }// zmienic potem na fukncje 
 														// czysto wirtualna
-	virtual void operator<< (Trzecz* rz);
-	void operator= (const Trzecz& rz);
-	void operator= (Trzecz&& rz);
+	virtual void operator<< (Item* rz);
+	void operator= (const Item& rz);
+	void operator= (Item&& rz);
 
 	// jesli mozna wejsc - 1, jesli nie - 0
 	bool czyDostep() const	 { return dostep; }

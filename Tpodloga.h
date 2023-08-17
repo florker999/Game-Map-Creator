@@ -1,14 +1,15 @@
 #ifndef TPODLOGA_H
 #define TPODLOGA_H
 
-#include "Trzecz.h"
+#include "Item.h"
 #include "Tskrzynia.h"
+
 class Tpodloga :
-    public Trzecz
+    public Item
 {
     
 private:
-    Trzecz* rzecz;
+    Item* rzecz;
     //Tosoba* osoba;
 
 public:
@@ -25,14 +26,14 @@ public:
 
     void reset();
     void zmienPolozenie(sf::Vector2f poz);
-    void zmienPrzedmiot(const Trzecz& rz);
+    void zmienPrzedmiot(const Item& rz);
 
-    void operator<< (Trzecz* rz) override;
+    void operator<< (Item* rz) override;
     void operator= (const Tpodloga& p);
     void operator= (Tpodloga&& p);
 
-    Trzecz& zwrocRzecz() const { return *rzecz; }
-    Trzecz* stworzWg() const override;
+    Item& zwrocRzecz() const { return *rzecz; }
+    Item* stworzWg() const override;
 };
 
 #endif

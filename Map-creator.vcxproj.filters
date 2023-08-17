@@ -33,7 +33,7 @@
     <ClCompile Include="Tpodloga.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Trzecz.cpp">
+    <ClCompile Include="Item.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="Tskrzynia.cpp">
@@ -65,7 +65,7 @@
     <ClInclude Include="Tpodloga.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
-    <ClInclude Include="Trzecz.h">
+    <ClInclude Include="Item.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Tskrzynia.h">

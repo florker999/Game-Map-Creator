@@ -1,15 +1,15 @@
 #include "Tpodloga.h"
 #include <iostream>
 
-Tpodloga::Tpodloga(const Tpodloga& p) : Trzecz(p), rzecz(nullptr)
+Tpodloga::Tpodloga(const Tpodloga& p) : Item(p), rzecz(nullptr)
 {
     if (p.czyRzecz())
     {
-        rzecz = new Trzecz(p.zwrocRzecz());
+        rzecz = new Item(p.zwrocRzecz());
     }
 }
 
-Tpodloga::Tpodloga(Tpodloga&& p) : Trzecz(p), rzecz(nullptr)
+Tpodloga::Tpodloga(Tpodloga&& p) : Item(p), rzecz(nullptr)
 {
     if (p.czyRzecz())
     {
@@ -17,7 +17,7 @@ Tpodloga::Tpodloga(Tpodloga&& p) : Trzecz(p), rzecz(nullptr)
     }
 }
 
-Tpodloga::Tpodloga(typ_rz typ, sf::Vector2f p, bool d) : Trzecz(typ, p, d), rzecz(nullptr)
+Tpodloga::Tpodloga(typ_rz typ, sf::Vector2f p, bool d) : Item(typ, p, d), rzecz(nullptr)
 {
     switch (typ)
     {
@@ -31,7 +31,7 @@ Tpodloga::Tpodloga(typ_rz typ, sf::Vector2f p, bool d) : Trzecz(typ, p, d), rzec
 }
 
 #if 0
-Tpodloga::Tpodloga(typ_ob typ, sf::Vector2f p, bool d) : Trzecz(typ_pod::pusty, p, d)
+Tpodloga::Tpodloga(typ_ob typ, sf::Vector2f p, bool d) : Item(typ_pod::pusty, p, d)
 {
     switch (typ)
     {
@@ -53,7 +53,7 @@ Tpodloga::~Tpodloga()
 
 bool Tpodloga::czyDostep() const
 {
-    bool d = Trzecz::czyDostep();
+    bool d = Item::czyDostep();
     if ( d && rzecz->czyIstnieje())
     {
         return rzecz->czyDostep();
@@ -75,18 +75,18 @@ void Tpodloga::reset()
 
 void Tpodloga::zmienPolozenie(sf::Vector2f poz)
 {
-    Trzecz::zmienPolozenie(poz);
+    Item::zmienPolozenie(poz);
     if (czyRzecz())
         rzecz->zmienPolozenie(poz); // dorobic virtual zeby rekurencyjnie
 }
 
-void Tpodloga::zmienPrzedmiot(const Trzecz& rz)
+void Tpodloga::zmienPrzedmiot(const Item& rz)
 {
     delete rzecz;
     rzecz = rz.stworzWg(); // ciekawe czy tu nie bedzie problemow
 }
 
-void Tpodloga::operator<<(Trzecz* rz)
+void Tpodloga::operator<<(Item* rz)
 {
     Tpodloga* wsk = dynamic_cast<Tpodloga*>(rz);
  
@@ -107,9 +107,9 @@ void Tpodloga::operator=(const Tpodloga& p)
     rzecz = nullptr;
 
     if (p.czyRzecz())
-        rzecz = new Trzecz(p.zwrocRzecz());
+        rzecz = new Item(p.zwrocRzecz());
  
-    Trzecz::operator=(p);
+    Item::operator=(p);
 }
 
 void Tpodloga::operator=(Tpodloga&& p)
@@ -121,11 +121,11 @@ void Tpodloga::operator=(Tpodloga&& p)
     rzecz = nullptr;
     
     if(p.czyRzecz())
-        rzecz = new Trzecz(p.zwrocRzecz());
-    Trzecz::operator=(p);
+        rzecz = new Item(p.zwrocRzecz());
+    Item::operator=(p);
 }
 
-Trzecz* Tpodloga::stworzWg() const
+Item* Tpodloga::stworzWg() const
 {
     return new Tpodloga(*this);
 }

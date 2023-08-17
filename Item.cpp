@@ -1,33 +1,33 @@
-#include "Trzecz.h"
+#include "Item.h"
 #include "global.h"
 
-Trzecz::Trzecz(typ_rz typ, sf::Vector2f p, bool d) : dostep(d), Trz(typ)
+Item::Item(typ_rz typ, sf::Vector2f p, bool d) : dostep(d), Trz(typ)
 {
 	zmienTeksture(mag.zwroc_t(typ));
 	wyglad.setOrigin(0, wyglad.getLocalBounds().height);
 	wyglad.setPosition(p);
 }
 
-void Trzecz::operator=(const Trzecz& rz)
+void Item::operator=(const Item& rz)
 {
 	wyglad = rz.zwrocSpr();
 	dostep = rz.czyDostep();
 	Trz = rz.zwrocTyp();
 }
 
-void Trzecz::operator<<(Trzecz* rz)
+void Item::operator<<(Item* rz)
 {
 	*this = *rz;
 }
 
-void Trzecz::operator=(Trzecz&& rz)
+void Item::operator=(Item&& rz)
 {
 	wyglad = rz.zwrocSpr();
 	dostep = rz.czyDostep();
 	Trz = rz.zwrocTyp();
 }
 
-bool Trzecz::czyMysz(sf::Vector2f p)
+bool Item::czyMysz(sf::Vector2f p)
 {
 	if (wyglad.getGlobalBounds().contains(p) )
 		return true;

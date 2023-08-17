@@ -1,15 +1,15 @@
 #include "Tskrzynia.h"
 #include <iostream>
 
-Tskrzynia::Tskrzynia(const Tskrzynia& inna) : Trzecz(inna)
+Tskrzynia::Tskrzynia(const Tskrzynia& inna) : Item(inna)
 {
 	zawartosc = new Tokno_skrzyni();
 	material = inna.material;
 	stan = inna.stan;
 }
 
-Tskrzynia::Tskrzynia(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Trzecz* wyp) :
-	Trzecz(typ, p), material(m), stan(), zawartosc(new Tokno_skrzyni(wyp, ilosc))
+Tskrzynia::Tskrzynia(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Item* wyp) :
+	Item(typ, p), material(m), stan(), zawartosc(new Tokno_skrzyni(wyp, ilosc))
 {
 }
 
@@ -19,17 +19,17 @@ Tskrzynia::~Tskrzynia()
 		delete zawartosc;
 }
 
-Trzecz* Tskrzynia::stworzWg() const
+Item* Tskrzynia::stworzWg() const
 {
 	return new Tskrzynia(*this);
 }
 
-Trzecz* Tskrzynia::wyjmijRzecz(sf::Vector2f pM)
+Item* Tskrzynia::wyjmijRzecz(sf::Vector2f pM)
 {
 	return zawartosc->wyjmijRzecz(pM);
 }
 
-void Tskrzynia::dodajRzecz(const Trzecz& nowa)
+void Tskrzynia::dodajRzecz(const Item& nowa)
 {
 	if (!zawartosc)
 		zawartosc = new Tokno_skrzyni();

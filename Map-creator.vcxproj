@@ -141,7 +141,7 @@
     <ClCompile Include="Tmikstura.cpp" />
     <ClCompile Include="Tokno_skrzyni.cpp" />
     <ClCompile Include="Tpodloga.cpp" />
-    <ClCompile Include="Trzecz.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Tskrzynia.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +152,7 @@
     <ClInclude Include="Tmikstura.h" />
     <ClInclude Include="Tokno_skrzyni.h" />
     <ClInclude Include="Tpodloga.h" />
-    <ClInclude Include="Trzecz.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Tskrzynia.h" />
     <ClInclude Include="typy.h" />
   </ItemGroup>
