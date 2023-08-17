@@ -268,40 +268,46 @@ void Creator::update()
 
 	if (isLpm)
 	{
-		// filling a tile
-		if (currentTool && mouseCoordinates.x < 1014 && !isBlockade && ((currentChest && !currentChest->czyMyszOkno(mouseCoordinates)) || !currentChest ))
+		// actions on the board
+		if ( mouseCoordinates.x < 1014 )
 		{
-			fillTile();
-		}
+			// filling a tile
+			if (currentTool && !isBlockade && ((currentChest && !currentChest->czyMyszOkno(mouseCoordinates)) || !currentChest ))
+			{
+				fillTile();
+			}
 
-		// setting up a blockade
-		else if ( isBlockade == true && mouseCoordinates.x < 1014 )
-		{
-			setBlockade();
-		}
+			// setting up a blockade
+			else if ( isBlockade == true)
+			{
+				setBlockade();
+			}
 
-		// choosing a tool
-		else if (sf::FloatRect(1016, 0, 78, 624).contains(mouseCoordinates))
-		{
-			chooseTool(mouseCoordinates);
-		}
+			// rubbing a tile
+			else if (isRubber)
+			{
+				rubTile();
+			}
 
-		// rubbing a tile
-		else if (isRubber)
-		{
-			rubTile();
-		}
+			// using an object
+			else if (!currentTool && tiles[mouseTilePos].czyRzecz())
+			{
+				useObject ( );
+			}
 
-		// using an object
-		else if (!currentTool && tiles[mouseTilePos].czyRzecz())
-		{
-			useObject ( );
+			// add or remove an item from a chest
+			else if (currentChest && currentChest->czyMyszOkno(mouseCoordinates)) // jesli skrzynia jest otwarta
+			{
+				useChest ( mouseCoordinates );
+			}
 		}
-
-		// add or remove an item from a chest
-		else if (currentChest && currentChest->czyMyszOkno(mouseCoordinates)) // jesli skrzynia jest otwarta
+		else
 		{
-			useChest ( mouseCoordinates );
+			// choosing a tool
+			if (sf::FloatRect(1016, 0, 78, 624).contains(mouseCoordinates))
+			{
+				chooseTool(mouseCoordinates);
+			}
 		}
 	}
 
