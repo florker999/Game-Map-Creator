@@ -1,0 +1,13 @@
+﻿################################################################################
+# Ten plik .gitignore został utworzony automatycznie przez Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Map-creator/FileContentIndex/878ea312-f1d2-425c-b5ba-916059a699f7.vsidx
+/.vs/Map-creator/FileContentIndex/f43ed22f-cfdb-4f5b-b1ce-b43ce5222b2f.vsidx
+/.vs/Map-creator/v17/Browse.VC.db
+/.vs/Map-creator/v17/Browse.VC.db-shm
+/.vs/Map-creator/v17/Browse.VC.db-wal
+/.vs/Map-creator/v17/Browse.VC.opendb
+/.vs/Map-creator/v17/ipch/AutoPCH/764d697485b29661/MAIN.ipch
+/.vs/Map-creator/v17/.suo
+/.vs/Map-creator/v17/ipch/AutoPCH/9bcdf468abbcac33/TMAGAZYN.ipch
