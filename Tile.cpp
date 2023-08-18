@@ -48,6 +48,8 @@ void Tile::zmienTeksture(typ_ob t)
 
 }
 
+inline void Tile::zmienPoz(sf::Vector2f p) { wygladPod.setPosition(p); wygladOb.setPosition(p); }
+
 void Tile::zmienBlok(typ_pod tP)
 {
 	switch (tP)
@@ -67,6 +69,22 @@ bool Tile::czyMysz(sf::RenderWindow& w, sf::Vector2f p)
 		return true;
 	else
 		return false;
+}
+
+Tile::Tile()
+{
+	typOb = typ_ob::pusty;
+	typPod = typ_pod::pusty;
+	blokada = true;
+}
+
+Tile::Tile(sf::Vector2f position)
+{
+	Tile();
+	wygladPod.setSize(sf::Vector2f(39, 39));
+	wygladOb.setSize(sf::Vector2f(39, 39));
+
+	zmienPoz(position);
 }
 
 void Tile::init(sf::Vector2f p, typ_pod tP, typ_ob tO)

@@ -12,6 +12,7 @@
 #include "global.h"
 #include "Fportal.h"
 #include "Tile.h"
+#include "Board.h"
 
 extern int toolsCounter;
 constexpr int tilesCounter{ 416 };
@@ -54,6 +55,7 @@ public:
 	Chest* currentChest;
 
 	// tiles
+	Board* currentBoard;
 	Tpodloga tiles[tilesCounter];	
 
 	// blockades container
@@ -64,16 +66,16 @@ public:
 
 private:
 
-	void process();
-	void setMousePos ( );
-	void update();
-	void render();
+	void update ( );
+	void render ( );
+	void process ( );
 
-	void fillTile();
-	void setBlockade();
-	void chooseTool(sf::Vector2f);
-	void rubTile();
-	void useObject();
+	void rubTile ( );
+	void fillTile ( );
+	void useObject ( );
+	void setBlockade ( );
+	void setMousePos ( );
+	void chooseTool ( sf::Vector2f );
 	void useChest ( const sf::Vector2f& mouseCoordinates );
 
 	int findBlockadeIndex ( int tile );
@@ -90,6 +92,7 @@ private:
 
 	int mouseTilePos;
 	int blockadesCounter;
+	int boardsCounter;
 
 #if 0 
 	void zapisz();
@@ -99,11 +102,11 @@ private:
 #endif
 };
 
-Creator::Creator() : 
-	window(sf::VideoMode(1094, 624, 32), "Map creator", sf::Style::Close),
-	isLpm(0), isPpm(0), mouseTilePos(0), isRubber(0), isDestroyer(0), key(0), isBlockade(0),
-	blockades(nullptr), blockadesCounter(0), blockadeType(0), currentTool(nullptr), currentChest(nullptr),
-	action (typ_akc::nic)
+Creator::Creator ( ) :
+	window ( sf::VideoMode ( 1094, 624, 32 ), "Map creator", sf::Style::Close ),
+	isLpm ( 0 ), isPpm ( 0 ), mouseTilePos ( 0 ), isRubber ( 0 ), isDestroyer ( 0 ), key ( 0 ), isBlockade ( 0 ),
+	blockades ( nullptr ), blockadesCounter ( 0 ), blockadeType ( 0 ), currentTool ( nullptr ), currentChest ( nullptr ),
+	action ( typ_akc::nic ), boardsCounter ( 1 ), currentBoard ( new Board ( tilesCounter ) )
 {
 
 	// setting the tools/floors/objects to take
@@ -135,6 +138,8 @@ Creator::Creator() :
 	// position of a new tile
 	sf::Vector2f position(0, 39);
 	sf::Vector2f mouseCoordinates(sf::Mouse::getPosition(window));
+
+	setMousePos ( );
 
 	// dividing the window into tiles
 	for (int i = 0; i < tilesCounter; i++)
@@ -611,7 +616,7 @@ void Creator::fillTile()
 		currentChest = nullptr;
 	}
 
-	tiles[mouseTilePos] << currentTool;
+	tiles[ mouseTilePos ] << currentTool;
 
 	if (blockadesCounter)
 	{

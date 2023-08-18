@@ -16,6 +16,8 @@ private:
 	bool blokada; // 0 - mozna przejsc; 1 - nie mozna przejsc
 
 public:
+	Tile ( );
+	Tile ( sf::Vector2f position );
 
 	sf::RectangleShape wygladPod;
 	sf::RectangleShape wygladOb;
@@ -26,7 +28,7 @@ public:
 	void zmienTeksture(typ_ob);
 	void zmienTeksture(sf::Texture& t) { wygladPod.setTexture(&t); };
 
-	void zmienPoz(sf::Vector2f p) { wygladPod.setPosition(p); wygladOb.setPosition(p); };
+	void zmienPoz(sf::Vector2f p);;
 
 	void zmienTypPod(typ_pod t = typ_pod::pusty) { typPod = t; };
 	void zmienTypOb(typ_ob t = typ_ob::pusty) { typOb = t; };
