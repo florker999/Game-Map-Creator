@@ -108,7 +108,7 @@ Creator::Creator ( ) :
 	action ( typ_akc::nic ), boardsCounter ( 1 ), currentBoard ( new Board ( tilesCounter ) )
 {
 	// setting the tools/floors/objects to take
-	std::vector<Item*> tymW =
+	std::vector<Placeable*> tymW =
 	{
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 39), 0) },		// blockade
 		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1055, 39), 1) },		// access
@@ -125,13 +125,13 @@ Creator::Creator ( ) :
 	};
 	tools = tymW;
 
-	tools[0]->setTexture (mag.zwroc_t(typ_rz::blokada));
-	tools[1]->zmienTeksture(mag.zwroc_t(typ_rz::dostep));
+	tools[ 0 ]->setTexture ( mag.zwroc_t ( typ_rz::blokada ) );
+	tools[ 1 ]->setTexture ( mag.zwroc_t ( typ_rz::dostep ) );
 
 	// building the this.wall strip
-	wall.setFillColor(sf::Color::Blue);
-	wall.setSize(sf::Vector2f(2, 624));
-	wall.setPosition(1014, 0);
+	wall.setFillColor ( sf::Color::Blue );
+	wall.setSize ( sf::Vector2f ( 2, 624 ) );
+	wall.setPosition ( 1014, 0 );
 
 	// position of a new tile
 	sf::Vector2f position(0, 39);
@@ -308,7 +308,7 @@ void Creator::update()
 	// move the tool
 	if ( currentTool )
 	{
-		currentTool->zmienPolozenie ( currentBoard->getCoordinatesOfSquare ( mouseTilePos ) );
+		currentTool->setPosition ( currentBoard->getCoordinatesOfSquare ( mouseTilePos ) );
 	}
 }
 

@@ -4,8 +4,10 @@
 #include "SFML/Graphics.hpp"
 #include "typy.h"
 #include "Tmagazyn.h"
+#include "Placeable.h"
 
-class Tile
+class Tile:
+	public Placeable
 {
 private:
 	sf::RectangleShape entity;
