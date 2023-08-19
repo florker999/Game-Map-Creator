@@ -2,10 +2,12 @@
 #include "Square.h"
 #include "Item.h"
 #include "Tile.h"
+#include "typy.h"
 
 class Board
 {
 private:
+
 	Square* squares;
 
 	Board* aboveBoard;
@@ -18,10 +20,20 @@ public:
 	Board ( int squaresNumber );
 
 	Board* addBoard ( int direction );
+	Item* getItemOnSquare ( int index );
+	typ_akc useItemOnSquare ( int index );
 
-	void drawOn ( sf::RenderWindow& window );
+	sf::Vector2f getCoordinatesOfSquare ( int index );
+
+	int findMousePos ( sf::Vector2f mouseCoordinates );
+
+	bool getAddAccessOfTile ( int index );
+
 	void removeBoard ( );
-	void setSquare ( int squareNumber, Tile* target );
-	void setSquare ( int squareNumber, Item* target );
+	void resetSquare ( int index );
+	void setAddAccessOnSquare ( int index, bool access );
+	void drawOn ( sf::RenderWindow& window );
+	void setSquare ( int index, Tile* target );
+	void setSquare ( int index, Item* target );
 };
 

@@ -22,6 +22,8 @@ public:
     Chest(typ_rz typ, sf::Vector2f p, typ_mat m = typ_mat::drewno, int ilosc = 0, Item* wyp = nullptr);
     ~Chest();
 
+    Chest* getChest ( );
+
     Item* stworzWg() const override;
     Item* wyjmijRzecz(sf::Vector2f pM);
 
@@ -32,7 +34,7 @@ public:
 
     bool czyMyszOkno(sf::Vector2f pM) { if (zawartosc) return zawartosc->czyMysz(pM); else return false; }
 
-    typ_akc akcja() override;
+    typ_akc use() override;
 };
 
 #endif

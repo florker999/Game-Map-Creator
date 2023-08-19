@@ -39,7 +39,7 @@ public:
 	void zmienPolozenie(const sf::Vector2f& poz)	{ wyglad.setPosition(poz); }
 	void zmienDostep(bool d)						{ dostep = d; }
 
-	virtual typ_akc akcja() { return typ_akc::nic; }
+	virtual typ_akc use() { return typ_akc::nic; }
 	
 	const sf::Vector2f zwrocPoz() const		{ return wyglad.getPosition(); }
 	const sf::Sprite& zwrocSpr() const		{ return wyglad; }

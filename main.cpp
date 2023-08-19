@@ -10,7 +10,6 @@
 #include "Tpodloga.h"
 #include "Tmikstura.h"
 #include "global.h"
-#include "Fportal.h"
 #include "Tile.h"
 #include "Board.h"
 
@@ -46,10 +45,10 @@ public:
 	sf::RectangleShape wall;
 	
 	// tools container
-	std::vector<Item*> tools;
+	std::vector<Placeable*> tools;
 
 	// chosen tool pointer
-	Item* currentTool;
+	Placeable *currentTool;
 
 	// chosen chest pointer
 	Chest* currentChest;
@@ -70,13 +69,13 @@ private:
 	void render ( );
 	void process ( );
 
-	void rubTile ( );
 	void fillTile ( );
+	void rubSquare ( );
 	void useObject ( );
-	void setBlockade ( );
 	void setMousePos ( );
-	void chooseTool ( sf::Vector2f );
+	void chooseTool ( sf::Vector2f& mouseCoordinates );
 	void useChest ( const sf::Vector2f& mouseCoordinates );
+	void setAddAccess ( );
 
 	int findBlockadeIndex ( int tile );
 
@@ -108,7 +107,6 @@ Creator::Creator ( ) :
 	blockades ( nullptr ), blockadesCounter ( 0 ), blockadeType ( 0 ), currentTool ( nullptr ), currentChest ( nullptr ),
 	action ( typ_akc::nic ), boardsCounter ( 1 ), currentBoard ( new Board ( tilesCounter ) )
 {
-
 	// setting the tools/floors/objects to take
 	std::vector<Item*> tymW =
 	{
@@ -127,7 +125,7 @@ Creator::Creator ( ) :
 	};
 	tools = tymW;
 
-	tools[0]->zmienTeksture(mag.zwroc_t(typ_rz::blokada));
+	tools[0]->setTexture (mag.zwroc_t(typ_rz::blokada));
 	tools[1]->zmienTeksture(mag.zwroc_t(typ_rz::dostep));
 
 	// building the this.wall strip
@@ -140,23 +138,6 @@ Creator::Creator ( ) :
 	sf::Vector2f mouseCoordinates(sf::Mouse::getPosition(window));
 
 	setMousePos ( );
-
-	// dividing the window into tiles
-	for (int i = 0; i < tilesCounter; i++)
-	{
-		tiles[i] = Tpodloga(typ_rz::pusty, position, 0 );
-		position.x += 39;
-
-		// iterating to next tile
-		if (position.x > 975) {
-			position.x = 0;
-			position.y += 39;
-		}
-
-		// determining the beginning position of the mouse
-		if (tiles[i].czyMysz(mouseCoordinates))
-			mouseTilePos = i;
-	}
 	/*
 	wczytaj();
 	wczytajBlok();
@@ -243,16 +224,9 @@ void Creator::process()
 void Creator::setMousePos ( )
 {
 	sf::Vector2f mouseCoordinates ( sf::Mouse::getPosition ( window ) );
-	if ( tiles[ mouseTilePos ].czyMysz ( mouseCoordinates ) == false )
+	if ( mouseCoordinates.x < 1014 )
 	{
-		for ( int b = 0; b < tilesCounter; b++ )
-		{
-			if ( tiles[ b ].czyMysz ( mouseCoordinates ) )
-			{
-				mouseTilePos = b;
-				break;
-			}
-		}
+		mouseTilePos = currentBoard->findMousePos ( mouseCoordinates );
 	}
 }
 
@@ -277,31 +251,31 @@ void Creator::update()
 		if ( mouseCoordinates.x < 1014 )
 		{
 			// filling a tile
-			if (currentTool && !isBlockade && ((currentChest && !currentChest->czyMyszOkno(mouseCoordinates)) || !currentChest ))
+			if ( currentTool && !isBlockade && ( ( currentChest && !currentChest->czyMyszOkno ( mouseCoordinates ) ) || !currentChest ) )
 			{
-				fillTile();
+				fillTile ( );
 			}
 
 			// setting up a blockade
-			else if ( isBlockade == true)
+			else if ( isBlockade )
 			{
-				setBlockade();
+				setAddAccess ( );
 			}
 
 			// rubbing a tile
-			else if (isRubber)
+			else if ( isRubber )
 			{
-				rubTile();
+				rubSquare ( );
 			}
 
 			// using an object
-			else if (!currentTool && tiles[mouseTilePos].czyRzecz())
+			else if ( !currentTool && tiles[ mouseTilePos ].czyRzecz ( ) )
 			{
 				useObject ( );
 			}
 
 			// add or remove an item from a chest
-			else if (currentChest && currentChest->czyMyszOkno(mouseCoordinates)) // jesli skrzynia jest otwarta
+			else if ( currentChest && currentChest->czyMyszOkno ( mouseCoordinates ) ) // jesli skrzynia jest otwarta
 			{
 				useChest ( mouseCoordinates );
 			}
@@ -309,18 +283,18 @@ void Creator::update()
 		else
 		{
 			// choosing a tool
-			if (sf::FloatRect(1016, 0, 78, 624).contains(mouseCoordinates))
+			if ( sf::FloatRect ( 1016, 0, 78, 624 ).contains ( mouseCoordinates ) )
 			{
-				chooseTool(mouseCoordinates);
+				chooseTool ( mouseCoordinates );
 			}
 		}
 	}
 
 	// destroy all the tiles
-	if (isDestroyer)
+	if ( isDestroyer )
 	{
 		for (int a = 0; a < tilesCounter; a++)
-			tiles[a].reset();
+			tiles[ a ].reset ( );
 
 		isDestroyer = 0;
 
@@ -332,9 +306,9 @@ void Creator::update()
 	}
 
 	// move the tool
-	if (currentTool)
+	if ( currentTool )
 	{
-		currentTool->zmienPolozenie(tiles[mouseTilePos].zwrocPoz());
+		currentTool->zmienPolozenie ( currentBoard->getCoordinatesOfSquare ( mouseTilePos ) );
 	}
 }
 
@@ -357,10 +331,10 @@ void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 
 int Creator::findBlockadeIndex ( int tileNumber )
 {
-	const sf::Vector2f tileCoordinates = tiles[ tileNumber ].zwrocPoz ( );
+	const sf::Vector2f tileCoordinates = currentBoard->getCoordinatesOfSquare ( tileNumber );
 	for (int a = 0; a < blockadesCounter; a++ )
 	{
-		if ( tileCoordinates == blockades[ a ].zwrocPoz ( ) )
+		if ( tileCoordinates == blockades[ a ].getPosition ( ) )
 			return a;
 	}
 	return -1;
@@ -368,12 +342,12 @@ int Creator::findBlockadeIndex ( int tileNumber )
 
 void Creator::useObject ( )
 {
-	action = tiles[ mouseTilePos ].zwrocRzecz ( ).akcja ( );
+	action = currentBoard->useItemOnSquare ( mouseTilePos );
 
 	switch ( action )
 	{
 	case typ_akc::otw_skrz:
-		currentChest = dynamic_cast<Chest*>( &tiles[ mouseTilePos ].zwrocRzecz ( ) );
+		currentChest = dynamic_cast< Chest* >( currentBoard->getItemOnSquare ( mouseTilePos ) );
 		break;
 
 	case typ_akc::zamk_skrz:
@@ -390,7 +364,7 @@ void Creator::useObject ( )
 void Creator::render()
 {
 	// board window
-	window.clear();
+	window.clear ( sf::Color::Black );
 	window.draw(wall);
 
 	for (auto w : tools)
@@ -399,22 +373,7 @@ void Creator::render()
 	}
 
 	// drawing the tiles
-	for (int a = 0; a < tilesCounter; a++)
-	{
-			window.draw(tiles[a].zwrocSpr());
-	}
-
-	for (int a = 0; a < tilesCounter ; a++)
-	{
-		if ( tiles[a].czyRzecz() )
-			window.draw(tiles[a].zwrocRzecz().zwrocSpr());
-	}
-
-	if (blockades)
-	{
-		for (int a = 0; a < blockadesCounter; a++)
-			window.draw(blockades[a].wygladPod);
-	}
+	currentBoard->drawOn ( window );
 	
 	// drawing the chest window if open
 	if (currentChest)
@@ -616,74 +575,19 @@ void Creator::fillTile()
 		currentChest = nullptr;
 	}
 
-	tiles[ mouseTilePos ] << currentTool;
-
-	if (blockadesCounter)
-	{
-		// looking up if a tile had a blockade
-		int blockadeIndex = findBlockadeIndex ( mouseTilePos );
-		if ( blockadeIndex > -1 )
-		{
-			blockadesCounter--;
-			Tile* prevBlockades = blockades;
-			if (blockadesCounter > 0)
-			{
-				// copying all the blockades but the found one
-				Tile* n_blok = new Tile[blockadesCounter];
-				int i = 0;
-				for (int b = 0; b < blockadesCounter; b++)
-				{
-					if (b != blockadeIndex)
-						n_blok[b] = blockades[i];
-					i++;
-				}
-				blockades = n_blok;
-			}
-			else
-			{
-				blockades = nullptr;
-			}
-			delete[] prevBlockades;
-		}
-	}
+	currentBoard->setSquare ( mouseTilePos, currentTool );
 }
 
-void Creator::setBlockade()
+void Creator::setAddAccess ( )
 {
-	if (blockades == nullptr)
-	{
-		blockades = new Tile[++blockadesCounter];
-		blockades->init(tiles[mouseTilePos].zwrocPoz());
-		blockades->zmienTeksture(mag.zwroc_t(blockadeType));
-	}
-	else
-	{
-		int blockadeIndex = findBlockadeIndex ( mouseTilePos );
-		if ( blockadeIndex == -1 )
-		{
-			Tile* newBlockades = new Tile[++blockadesCounter];
-			for (int a = 0; a < blockadesCounter - 1; a++)
-				newBlockades[a] = blockades[a];
-			newBlockades[blockadesCounter - 1].init(tiles[mouseTilePos].zwrocPoz());
-			newBlockades[blockadesCounter - 1].zmienTeksture(mag.zwroc_t(blockadeType));
-
-			delete[] blockades;
-			blockades = newBlockades;
-		}
-		else
-		{
-			blockades[blockadeIndex].zmienBlok(blockadeType);
-			blockades[blockadeIndex].zmienTeksture(mag.zwroc_t(blockadeType));
-		}
-	}
-	tiles[mouseTilePos].zmienDostep(blockadeType);
+	currentBoard->setAddAccessOnSquare ( mouseTilePos, blockadeType );
 }
 
-void Creator::chooseTool(sf::Vector2f mouseCoordinates)
+void Creator::chooseTool ( sf::Vector2f& mouseCoordinates )
 {
-	for (int a = 0; a < toolsCounter; a++)
+	for (int i = 0; i < toolsCounter; i++)
 	{
-		if (tools[a]->czyMysz(mouseCoordinates))
+		if ( tools[ i ]->czyMysz ( mouseCoordinates ) )
 		{
 			/*
 			if (currentChest)
@@ -692,13 +596,13 @@ void Creator::chooseTool(sf::Vector2f mouseCoordinates)
 				currentChest = nullptr;
 			}
 			*/
-			delete currentTool;
-			currentTool = tools[a]->stworzWg();
+			if (currentTool != nullptr ) delete currentTool;
+			currentTool = tools[i]->stworzWg();
 			isBlockade = 0;
-			if (a <= 1) // wybranie blokady
+			if (i <= 1) // wybranie blokady
 			{
 				isBlockade = 1;
-				if (a == 1) blockadeType = false;
+				if (i == 1) blockadeType = false;
 				else blockadeType = true;
 			}
 
@@ -709,53 +613,14 @@ void Creator::chooseTool(sf::Vector2f mouseCoordinates)
 	}
 }
 
-void Creator::rubTile()
+void Creator::rubSquare ()
 {
 	if (currentChest)
 	{
 		currentChest->zamknij();
 		currentChest = nullptr;
 	}
-	tiles[mouseTilePos].reset();
-
-	if (blockadesCounter)
-	{
-		bool foundBlockade = 0;
-		int a;
-		for (a = 0; a < blockadesCounter; a++)
-		{
-			if (tiles[mouseTilePos].zwrocPoz() == blockades[a].zwrocPoz())
-			{
-				foundBlockade = 1;
-				break;
-			}
-		}
-		if (foundBlockade)
-		{
-			if (--blockadesCounter)
-			{
-				Tile* n_blok = new Tile[blockadesCounter];
-				int b;
-				int i = 0;
-				for (b = 0; b < blockadesCounter; b++)
-				{
-					if (b != a)
-						n_blok[b] = blockades[i];
-					else
-						n_blok[b] = blockades[++i];
-					i++;
-				}
-				delete[] blockades;
-				blockades = n_blok;
-			}
-			else
-			{
-				delete[] blockades;
-				blockades = nullptr;
-			}
-		}
-	}
-	// isLpm = 0;
+	currentBoard->resetSquare ( mouseTilePos );
 }
 
 int main()

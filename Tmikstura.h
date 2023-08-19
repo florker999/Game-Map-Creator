@@ -12,6 +12,6 @@ public:
     Tmikstura(typ_rz typ, sf::Vector2f poz, bool d) : Item(typ, poz, d) {}
 
     Item* stworzWg() const override;
-    typ_akc akcja() override { return typ_akc::nic; }
+    typ_akc use() override { return typ_akc::nic; }
 };
 

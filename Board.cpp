@@ -1,9 +1,9 @@
 #include "Board.h"
 
-Board::Board ( int squaresNumber ) : aboveBoard ( nullptr ), belowBoard ( nullptr ), leftBoard ( nullptr ), rightBoard ( nullptr ), squaresNumber( squaresNumber )
+Board::Board ( int squaresNumber ) : squaresNumber ( squaresNumber ), aboveBoard ( nullptr ), belowBoard ( nullptr ), leftBoard ( nullptr ), rightBoard ( nullptr )
 {
-	sf::Vector2f position ( 0, 39 );
 	squares = new Square[ squaresNumber ];
+	sf::Vector2f position ( 0, 39 );
 	for ( int i = 0; i < squaresNumber; i++ )
 	{
 		squares[ i ].setPositon ( position );
@@ -35,16 +35,55 @@ Board* Board::addBoard ( int direction ) // 0 - above | 1 - right | 2 - below | 
 	return newBoard;
 }
 
+Item* Board::getItemOnSquare ( int index )
+{
+	return squares[ index ].getItem ( );
+}
+
+typ_akc Board::useItemOnSquare ( int index )
+{
+	return squares[ index ].useItem ( );
+}
+
+sf::Vector2f Board::getCoordinatesOfSquare ( int index )
+{
+	return squares[ index ].getPosition ( );
+}
+
+int Board::findMousePos ( sf::Vector2f mouseCoordinates )
+{
+	for ( int i = 0; i < squaresNumber; i++ )
+	{
+		if ( squares[ i ].contains ( mouseCoordinates ) ) return i;
+	}
+	return -1;
+}
+
+bool Board::getAddAccessOfTile ( int index )
+{
+	return squares[index].getAddAccess();
+}
+
 void Board::removeBoard ( )
 {
 }
 
-void Board::setSquare ( int squareNumber, Tile* target )
+void Board::resetSquare ( int index )
 {
-	squares[ squareNumber ] << target;
+	squares[ index ].reset ( );
 }
 
-void Board::setSquare ( int squareNumber, Item* target )
+void Board::setAddAccessOnSquare ( int index, bool access )
 {
-	squares[ squareNumber ] << target;
+	squares[ index ].setAddAccess ( access );
+}
+
+void Board::setSquare ( int index, Tile* target )
+{
+	squares[ index ] << target;
+}
+
+void Board::setSquare ( int index, Item* target )
+{
+	squares[ index ] << target;
 }

@@ -19,6 +19,11 @@ Chest::~Chest()
 		delete zawartosc;
 }
 
+Chest* Chest::getChest ( )
+{
+	return this;
+}
+
 Item* Chest::stworzWg() const
 {
 	return new Chest(*this);
@@ -42,7 +47,7 @@ void Chest::pokazWnetrze(sf::RenderWindow& okno)
 	zawartosc->pokazWnetrze(okno);
 }
 
-typ_akc Chest::akcja()
+typ_akc Chest::use()
 {
 	if (stan == 0)
 	{

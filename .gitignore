@@ -39,3 +39,5 @@ x64/Debug/Tskrzynia.obj
 /Map-creator.vcxproj.filters
 .DS_Store
 /.vs/Map-creator/v17/ipch/AutoPCH/c7e41104a32faf34/TILE.ipch
+/.vs/Map-creator/v17/ipch/AutoPCH/f3807b3f6b2bd57f/GLOBAL.ipch
+/.vs/Map-creator/v17/ipch/AutoPCH/74ad81e3c0ac3302/FPORTAL.ipch

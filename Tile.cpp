@@ -2,116 +2,50 @@
 #include "typy.h"
 #include "global.h"
 
-void Tile::zmienRoz(typ_ob t)
-{
-	switch (t)
-	{
-	case typ_ob::dSkrzynia:
-		wygladOb.setSize(sf::Vector2f(78, 39));
-		break;
-
-	case typ_ob::drzwi_drew:
-		wygladOb.setSize(sf::Vector2f(39, 78));
-		break;
-		
-	default:
-		wygladOb.setSize(sf::Vector2f(39, 39));
-		break;
-	}
-}
-
-void Tile::zmienTeksture(typ_pod t)
+void Tile::setTexture(typ_pod t)
 {
 	if (static_cast<bool>(t))
 	{
-		wygladPod.setTexture(&mag.zwroc_t(t));
-		zmienBlok(t);
+		entity.setTexture(&mag.zwroc_t(t));
 	}
 	else
-		wygladPod.setTexture(NULL);
-	typPod = t;
+		entity.setTexture(NULL);
 }
 
-void Tile::zmienTeksture(typ_ob t)
+inline void Tile::setTexture ( sf::Texture& t ) { entity.setTexture ( &t ); }
+
+inline void Tile::setPosition(sf::Vector2f p) { entity.setPosition(p); }
+
+void Tile::drawOn ( sf::RenderWindow& window )
 {
-	zmienRoz(t);
-	if (static_cast<bool>(t))
-	{
-		wygladOb.setTexture(&mag.zwroc_t(t));
-		blokada = 1;
-		wygladOb.setOrigin(0, wygladOb.getLocalBounds().height);
-
-	}
-	else
-		wygladOb.setTexture(NULL);
-	typOb = t;
-
+	window.draw ( entity );
 }
 
-inline void Tile::zmienPoz(sf::Vector2f p) { wygladPod.setPosition(p); wygladOb.setPosition(p); }
+inline void Tile::resetTexture ( ) { entity.setTexture ( NULL ); }
 
-void Tile::zmienBlok(typ_pod tP)
+bool Tile::contains( sf::Vector2f p )
 {
-	switch (tP)
-	{
-	case typ_pod::trawa:
-		blokada = 0;
-		break;
-
-	default:
-		blokada = 1;
-	}
+	return entity.getGlobalBounds().contains(p);
 }
 
-bool Tile::czyMysz(sf::RenderWindow& w, sf::Vector2f p)
-{
-	if (wygladPod.getGlobalBounds().contains(p))
-		return true;
-	else
-		return false;
-}
+sf::Vector2f Tile::getPosition ( ) { return entity.getPosition ( ); }
 
 Tile::Tile()
 {
-	typOb = typ_ob::pusty;
-	typPod = typ_pod::pusty;
-	blokada = true;
+	entity.setSize(sf::Vector2f(39, 39));
+	entity.setOrigin ( 0, entity.getLocalBounds ( ).height );
+	entity.setFillColor( sf::Color::Transparent );
 }
 
-Tile::Tile(sf::Vector2f position)
+Tile::Tile ( sf::Vector2f position ): Tile ( )
 {
-	Tile();
-	wygladPod.setSize(sf::Vector2f(39, 39));
-	wygladOb.setSize(sf::Vector2f(39, 39));
-
-	zmienPoz(position);
+	setPosition (position);
 }
 
-void Tile::init(sf::Vector2f p, typ_pod tP, typ_ob tO)
+void Tile::init ( sf::Vector2f p, typ_pod tP )
 {
-	typPod = tP;
-	typOb = tO;
-
-	zmienBlok(tP);
-
-	wygladPod.setSize(sf::Vector2f(39, 39));
-
-	zmienRoz(tO);
-
-	
-
-	zmienPoz(p);
-
-	if (static_cast<bool>(typPod))
-		zmienTeksture(typPod);
-	else
-		wygladPod.setTexture(NULL);
-
-	if (static_cast<bool>(typOb))
-		zmienTeksture(typOb);
-	else
-		wygladOb.setTexture(NULL);
-	
-	wygladPod.setOrigin(0, wygladPod.getLocalBounds().height);
-	//wygladOb.setOrigin(0, wygladOb.getLocalBounds().height);
+	entity.setTexture ( NULL );
+	entity.setSize(sf::Vector2f(39, 39));
+	entity.setOrigin(0, entity.getLocalBounds().height);
+	setPosition (p);
 }
