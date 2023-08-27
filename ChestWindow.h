@@ -1,36 +1,57 @@
 #ifndef CHEST_WINDOW_H
 #define CHEST_WINDOW_H
 
-#include "Item.h"
-#include "typy.h"
+#include "Variants.h"
 #include "global.h"
 #include "SFML/Graphics.hpp"
+#include "Placeable.h"
+#include "Item.h"
 
-class ChestWindow :
-    public Item
+class ChestWindow
 {
+    class Slot {
+        Item* item = nullptr;
+        int counter = 0;
+        sf::RectangleShape square;
+        
+    public:
+        Slot() { square.setSize((39, 39)); square.setOrigin(0, 39); }
+        void setPosition(sf::Vector2f coordinates) {
+            square.setPosition(coordinates);
+            if (item) item->setPosition(coordinates);
+        }
+        
+        void setItem( const Item* newItem ) { item = newItem; }
+        void drawOn (sf::RenderWindow& window) { if(item) item->drawOn(window); }
+        Item* popItem() { Item* tempItem = item; item = nullptr; return tempItem; }
+        bool hasItem() { return item == nullptr ? false : true};
+        bool contains(sf::Vector2f coordinates) { return square.getGlobalBounds().contains(coordinates); }
+        sf::Vector2f getPosition() { return square.getPosition(); }
+    }
 
 private:
-    Item** zawartosc;
-    int ilosc_rzeczy;
-    static sf::Sprite okienko;
+    Slot* slots;
+    static sf::RectangleShape window;
+    int slotsNumber;
+    
+    void setSlotsPosition ();
+    void drawSlotsOn(sf::RenderWindow& window);
+    Slot* findSlot ( sf::Vector2f coordinates );
+    bool isItemInSlot(int index);
 
 public:
 
-    ChestWindow() : zawartosc(nullptr), ilosc_rzeczy() {}
-
-    ChestWindow(Item* nZaw, int ilosc); // argument pierwszy
+    ChestWindow(int slotsNumber);
+    ChestWindow(int slotsNumber, Item* newContent);
     ~ChestWindow();
 
-    int zwrocIloscRz() const { return ilosc_rzeczy; }
+    void store(Item& nowa);
+    void position(sf::Vector2f start);
+    void drawOn(sf::RenderWindow& okno);
+    
+    bool contains(sf::Vector2f coordinates);
 
-    void dodajRzecz(const Item& nowa);
-    void otwarcie(sf::Vector2f start);
-    void pokazWnetrze(sf::RenderWindow& okno);
-
-    bool czyMysz(sf::Vector2f pM);
-
-    Item* wyjmijRzecz(sf::Vector2f pM);
+    Item* takeOut(sf::Vector2f coordinates);
 };
 
 #endif

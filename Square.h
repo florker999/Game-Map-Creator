@@ -1,10 +1,10 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Placeable.h"
-#include "Tile.h"
-#include "Item.h"
 #include "typy.h"
 #include "global.h"
+#include "Tile.h"
+#include "Item.h"
 
 class Square
 {
@@ -29,6 +29,7 @@ public:
 
 	bool contains ( sf::Vector2f point );
 	bool getAddAccess ( );
+    bool hasItem() const;
 
 	void reset ( );
 	void setAddAccess ( bool access );

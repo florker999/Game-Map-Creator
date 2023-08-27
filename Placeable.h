@@ -1,10 +1,25 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
+
+class Chest;
 
 class Placeable
 {
+protected:
+    sf::RectangleShape entity;
+
 public:
-	virtual void setTexture ( sf::Texture& t ) = 0;
-	virtual void setPosition ( sf::Vector2f p ) = 0;
+    Placeable( );
+    Placeable( sf::Texture& texture, sf::Vector2f& coordinates );
+    
+    void drawOn (sf::RenderWindow& window) const;
+	void setTexture ( const sf::Texture& t );
+	void setPosition ( const sf::Vector2f& p );
+    virtual void putInto ( Chest* container ) = 0;
+    
+    sf::Vector2f getPosition( ) const;
+    
+    bool contains ( sf::Vector2f p ) const;
 };
 

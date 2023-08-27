@@ -1,38 +1,38 @@
 #ifndef CHEST_H
 #define CHEST_H
 
-#include "Item.h"
-#include "typy.h"
+#include "Variants.h"
 #include "global.h"
 #include "ChestWindow.h"
 
-class Chest : public Item
+class Chest :
+    public Item
 {
 
 private:
 
-    ChestWindow* zawartosc;
-    typ_mat material;
+    ChestWindow* content;
 
-    bool stan; // 0 - zamknieta, 1 - otwarta
+    bool isOpen; // 0 - zamknieta, 1 - otwarta
+    int capacity;
 
 public:
     
-    Chest(const Chest& inna);
-    Chest(typ_rz typ, sf::Vector2f p, typ_mat m = typ_mat::drewno, int ilosc = 0, Item* wyp = nullptr);
+    Chest(const Chest& targetChest);
+    Chest(chest_v type);
+    Chest( sf::Vector2f coordinates, chest_v m = chest_v::wooden, bool big = false, Item* newContent = nullptr);
     ~Chest();
 
     Chest* getChest ( );
 
-    Item* stworzWg() const override;
-    Item* wyjmijRzecz(sf::Vector2f pM);
+    Item* takeOut(sf::Vector2f mouseCoordinates);
 
-    void dodajRzecz(const Item& nowa);
-    void zamknij() { stan = 0; }
-    void otworz() { stan = 1; if(zawartosc) zawartosc->otwarcie(zwrocPoz()); }
-    void pokazWnetrze(sf::RenderWindow& okno);
+    void store(const Item& nowa);
+    void close() { stan = 0; }
+    void open() { stan = 1; if(zawartosc) zawartosc->otwarcie(getPosition()); }
+    void showWindow(sf::RenderWindow& okno);
 
-    bool czyMyszOkno(sf::Vector2f pM) { if (zawartosc) return zawartosc->czyMysz(pM); else return false; }
+    bool containsChestWindow(sf::Vector2f mouseCoordinates);
 
     typ_akc use() override;
 };

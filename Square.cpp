@@ -46,6 +46,10 @@ bool Square::getAddAccess ( )
 	return additionalAccess;
 }
 
+bool Square::hasItem() const {
+    return item != nullptr;
+}
+
 void Square::reset ( )
 {
 	sf::Vector2f oldPos = mainTile->getPosition ( );
@@ -70,10 +74,10 @@ void Square::setAddAccess ( bool access )
 void Square::drawOn ( sf::RenderWindow& window )
 {
 	mainTile->drawOn ( window );
-	if (item != nullptr ) window.draw ( item->zwrocSpr ( ) );
+    if (item != nullptr ) item->drawOn(window);
 	if ( additionalAccess != nullptr ) {
-		if ( *additionalAccess == true ) accessEntity.setTexture ( &mag.zwroc_t ( 1 ) );
-		else accessEntity.setTexture ( &mag.zwroc_t ( 0 ) );
+		if ( *additionalAccess == true ) accessEntity.setTexture ( &mag.get ( 1 ) );
+		else accessEntity.setTexture ( &mag.get ( 0 ) );
 		accessEntity.setPosition ( mainTile->getPosition ( ) );
 		window.draw ( accessEntity );
 	}

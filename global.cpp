@@ -1,5 +1,5 @@
 #include "global.h"
 
-#include "Tmagazyn.h"
+#include "Vault.h"
 
-Tmagazyn mag;
+Vault vault;

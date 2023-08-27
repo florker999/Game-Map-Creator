@@ -1,124 +1,96 @@
 #include "ChestWindow.h"
 #include "SFML/Graphics.hpp"
+ 
+sf::Sprite ChestWindow::window = sf::Sprite(vault.get(add_v::chest_wdw));
 
-sf::Sprite ChestWindow::okienko = sf::Sprite(mag.zwroc_t(typ_dod::wSkrz));
+ChestWindow::ChestWindow (int slotsNumber) {
+    slots = new Slot[9];
+    this->slotsNumber = slotsNumber;
+}
 
-ChestWindow::ChestWindow(Item* nZaw, int ilosc)
+ChestWindow::ChestWindow(int slotsNumber, Item* newContent)
 {
-	if (ilosc == 0)
-	{
-		ilosc_rzeczy = 0;
-		zawartosc = nullptr;
-	}
-	else
-	{
-		ilosc_rzeczy = ilosc;
-
-		zawartosc = new Item * [9]{};
-		for (int a = 0; a < 9; a++, nZaw++)
-			zawartosc[a] = nZaw;
-	}
+    this->slotsNumber = slotsNumber;
+    for (int i = 0; i < slotsNumber; i++) {
+        slots[i].setItem(newContent+i);
+    }
 }
 
 ChestWindow::~ChestWindow()
 {
-	if (zawartosc)
-		delete[] zawartosc;
+	if (slots)
+		delete[] slots;
 }
 
-void ChestWindow::dodajRzecz(const Item& nowa)
-{
-	if (zawartosc == nullptr)
-		zawartosc = new Item * [9]{};
-
-	sf::Vector2f mscRz = okienko.getPosition();
-	mscRz.y += 39;		
-
-	int ktr;
-	for (ktr = 0; ktr < 9; ktr++)
-	{
-		if (zawartosc[ktr] && zawartosc[ktr]->zwrocPoz() == nowa.zwrocPoz())
-			break;
-		else if (zawartosc[ktr] == nullptr && mscRz == nowa.zwrocPoz())
-			break;
-
-		mscRz.x += 39;
-		if ((ktr % 3) == 2)
-		{
-			mscRz.x -= 117;
-			mscRz.y += 39;
-		}
-	}
-		
-	if (zawartosc[ktr])
-	{
-		delete zawartosc[ktr];
-		ilosc_rzeczy--;
-	}
-
-	zawartosc[ktr] = nowa.stworzWg();
-	ilosc_rzeczy++;
-
+void ChestWindow::setSlotsPosition() {
+    sf::Vector2f coordinates = window.getPosition();
+    coordinates.y += 39;
+    for (int i = 0; i < 9; i++) {
+        Slot* slot = slots+i;
+        if (slot) {
+            slot->setPosition(coordinates);
+        }
+        coordinates.x += 39;
+        if (i % 3 == 2)
+        {
+            coordinates.x -= 117;
+            coordinates.y += 39;
+        }
+    }
 }
 
-void ChestWindow::otwarcie(sf::Vector2f start)
-{
-	okienko.setPosition(start);
-	if (ilosc_rzeczy)
-	{
-		start.y += 39;
-		for (int a = 0; a < 9; a++)
-		{
-			if (zawartosc[a])
-				zawartosc[a]->zmienPolozenie(start);
-			start.x += 39;
-			
-			if ((a % 3) == 2)
-			{
-				start.x -= 117;
-				start.y += 39;
-			}
-		}
-	}
+void ChestWindow::drawSlotsOn(sf::RenderWindow &window) {
+    for (int i = 0; i < slotsNumber; i++) {
+        slots[i].drawOn(window);
+    }
 }
 
-void ChestWindow::pokazWnetrze(sf::RenderWindow& okno)
-{
-	okno.draw(okienko);
-
-	if (zawartosc)
-	{
-		for (int a = 0; a < 9; a++)
-		{
-			if (zawartosc[a])
-				okno.draw(zawartosc[a]->zwrocSpr());
-		}
-	}
+Slot *ChestWindow::findSlot(sf::Vector2f coordinates) {
+    for (int i = 0; i < slotsNumber; i++) {
+        if (slots[i].contains(coordinates)) return slots+i;
+    }
+    return nullptr;
 }
 
-bool ChestWindow::czyMysz(sf::Vector2f pM)
-{
-	if (okienko.getGlobalBounds().contains(pM))
-		 return true;
-	else return false;
+bool ChestWindow::isItemInSlot(int index) {
+    return slots[index].hasItem();
 }
 
-Item* ChestWindow::wyjmijRzecz(sf::Vector2f pM)
+Item* ChestWindow::store( Item& newItem )
 {
-	if (ilosc_rzeczy == 0)
-		return nullptr;
+    Item* returnItem = &newItem;
+    Slot* selectedSlot = findSlot(newItem.getPosition());
+    if (selectedSlot) {
+        returnItem = selectedSlot->popItem();
+        selectedSlot->setItem(&newItem);
+    }
+    return returnItem;
+}
 
-	Item* wyjeta = nullptr;
-	for (int a = 0; a < 9; a++)
-	{
-		if (zawartosc[a] && zawartosc[a]->czyMysz(pM))
-		{
-			wyjeta = zawartosc[a];
-			zawartosc[a] = nullptr;
-			ilosc_rzeczy--;
-			break;
-		}
-	}
+void ChestWindow::position(sf::Vector2f start)
+{
+	window.setPosition(start);
+    setSlotsPosition();
+}
 
-	return wyjeta;
+void ChestWindow::drawOn(sf::RenderWindow& window)
+{
+    position(sf::Vector2f(window.getPosition()));
+	window.draw(this->window);
+    drawSlotsOn(window);
+}
+
+bool ChestWindow::contains(sf::Vector2f coordinates)
+{
+    return window.getGlobalBounds().contains(coordinates);
+}
+
+Item* ChestWindow::takeOut(sf::Vector2f coordinates)
+{
+    Slot* selectedSlot = findSlot(coordinates);
+    if (selectedSlot) {
+        return selectedSlot->popItem();
+    } else {
+        return nullptr;
+    }
 }

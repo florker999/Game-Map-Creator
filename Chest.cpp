@@ -1,22 +1,25 @@
 #include "Chest.h"
 #include <iostream>
 
-Chest::Chest(const Chest& inna) : Item(inna)
+Chest::Chest(const Chest& inna) : Item()
 {
-	zawartosc = new ChestWindow();
-	material = inna.material;
-	stan = inna.stan;
+	content = new ChestWindow(inna.capacity);
+    capacity = inna.capacity;
+	isOpen = inna.isOpen;
 }
 
-Chest::Chest(typ_rz typ, sf::Vector2f p, typ_mat m, int ilosc, Item* wyp) :
-	Item(typ, p), material(m), stan(), zawartosc(new ChestWindow(wyp, ilosc))
+Chest::Chest(chest_v type) : Item(vault.get(type)) {
+}
+
+Chest::Chest( sf::Vector2f coordinates, chest_v chest_v, bool big, Item* newContent ) :
+	Item(vault.get(chest_v), coordinates), isOpen(false), content(new ChestWindow(capacity, newContent)), capacity(big == false ? 4 : 9)
 {
 }
 
 Chest::~Chest()
 {
-	if (zawartosc)
-		delete zawartosc;
+	if (content != nullptr)
+		delete content;
 }
 
 Chest* Chest::getChest ( )
@@ -24,40 +27,38 @@ Chest* Chest::getChest ( )
 	return this;
 }
 
-Item* Chest::stworzWg() const
+Item* Chest::takeOut(sf::Vector2f mouseCoordinates)
 {
-	return new Chest(*this);
+	return content->takeOut(mouseCoordinates);
 }
 
-Item* Chest::wyjmijRzecz(sf::Vector2f pM)
+void Chest::store(const Item& item)
 {
-	return zawartosc->wyjmijRzecz(pM);
+	if ( content != nullptr )
+		content = new ChestWindow();
+
+	content->store(item);
 }
 
-void Chest::dodajRzecz(const Item& nowa)
+void Chest::showWindow (sf::RenderWindow& okno)
 {
-	if (!zawartosc)
-		zawartosc = new ChestWindow();
-
-	zawartosc->dodajRzecz(nowa);
+	content->pokazWnetrze(okno);
 }
 
-void Chest::pokazWnetrze(sf::RenderWindow& okno)
+action_v Chest::use()
 {
-	zawartosc->pokazWnetrze(okno);
-}
-
-typ_akc Chest::use()
-{
-	if (stan == 0)
+	if (isOpen == 0)
 	{
-		otworz();
-		return typ_akc::otw_skrz;
+		open();
+		return action_v::open_ch;
 	}
-	else if (stan == 1)
+	else
 	{
-		zamknij();
-		return typ_akc::zamk_skrz;
+		close();
+		return action_v::close_ch;
 	}
-	else return typ_akc::nic;
+}
+
+bool Chest::containsChestWindow(sf::Vector2f mouseCoordinates) {
+    return content->czyMysz(mouseCoordinates);
 }

@@ -1,8 +1,10 @@
 #pragma once
-#include "Square.h"
-#include "Item.h"
 #include "Tile.h"
 #include "typy.h"
+#include "Square.h"
+#include "Item.h"
+
+class Placeable;
 
 class Board
 {
@@ -23,11 +25,12 @@ public:
 	Item* getItemOnSquare ( int index );
 	typ_akc useItemOnSquare ( int index );
 
-	sf::Vector2f getCoordinatesOfSquare ( int index );
+	sf::Vector2f getCoordinatesOnSquare ( int index );
 
 	int findMousePos ( sf::Vector2f mouseCoordinates );
 
-	bool getAddAccessOfTile ( int index );
+    bool hasItemOnSquare (int index) const;
+	bool getAddAccessOnSquare ( int index );
 
 	void removeBoard ( );
 	void resetSquare ( int index );
@@ -35,5 +38,6 @@ public:
 	void drawOn ( sf::RenderWindow& window );
 	void setSquare ( int index, Tile* target );
 	void setSquare ( int index, Item* target );
+    void setSquare ( int index, Placeable* target );
 };
 

@@ -1,36 +1,21 @@
-#include <SFML\System.hpp>
-#include <SFML\Graphics.hpp>
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "typy.h"
-#include "Tmagazyn.h"
+#include "Variants.h"
+#include "Vault.h"
 #include "Chest.h"
-#include "Tpodloga.h"
-#include "Tmikstura.h"
+#include "Floor.h"
+#include "Mixture.h"
 #include "global.h"
 #include "Tile.h"
 #include "Board.h"
+#include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
 
 extern int toolsCounter;
 constexpr int tilesCounter{ 416 };
 bool check{ 0 };
-
-
-sf::Texture& Tmagazyn::zwroc_t(typ_pod type)
-{
-	switch (type) {
-	case typ_pod::trawa:
-		return magazyn[0];
-
-	case typ_pod::woda:
-		return magazyn[5];
-
-	default:
-		return pusty;
-	}
-}
 
 
 /////////////////////////////////////
@@ -55,8 +40,7 @@ public:
 
 	// tiles
 	Board* currentBoard;
-	Tpodloga tiles[tilesCounter];	
-
+    
 	// blockades container
 	Tile* blockades;				
 
@@ -110,23 +94,23 @@ Creator::Creator ( ) :
 	// setting the tools/floors/objects to take
 	std::vector<Placeable*> tymW =
 	{
-		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 39), 0) },		// blockade
-		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1055, 39), 1) },		// access
-		{ new Tpodloga(typ_rz::trawa, sf::Vector2f(1016, 78), 1) },		// grass
-		{ new Chest(typ_rz::skrzynia, sf::Vector2f(1055, 78)) },	// chest
-		{ new Chest(typ_rz::duza_skrzynia, sf::Vector2f(1016, 117)) },// big chest
-		{ new Tpodloga(typ_rz::woda, sf::Vector2f(1016, 156), 0) },		// water
-		{ new Tpodloga(typ_rz::cobel, sf::Vector2f(1055, 156)) },		// cobbelstone
-		{ new Chest(typ_rz::drzwi_drew, sf::Vector2f(1016, 234)) },	// wooden door
-		{ new Tmikstura(typ_rz::mikstura_zycia, sf::Vector2f(1055, 195), 1)}, // life mixture
-		{ new Tpodloga(typ_rz::podloze_drewniane, sf::Vector2f(1055, 234))}, // wooden floor
-		{ new Chest(typ_rz::witraz, sf::Vector2f(1016, 273)) },		// stained glass
-		{ new Chest(typ_rz::pochodnia, sf::Vector2f(1055, 273))}	// fire torch
+        new Floor(add_v::blockade, sf::Vector2f(1016, 39)) ,		// blockade
+        new Floor(add_v::access, sf::Vector2f(1055, 39)) ,		// access
+        new Floor(floor_v::grass, sf::Vector2f(1016, 78)) ,		// grass
+        new Chest(chest_v::wooden, sf::Vector2f(1055, 78)) ,	        // chest
+        new Chest(chest_v::wooden, sf::Vector2f(1016, 117), true) ,     // big chest
+        new Floor(floor_v::water, sf::Vector2f(1016, 156), 0) ,		// water
+        new Floor(wall_v::cobelstone, sf::Vector2f(1055, 156)) ,		    // cobbelstone wall
+        new Item(door_v::wooden, sf::Vector2f(1016, 234)) ,	    // wooden door
+        new Mixture( sf::Vector2f(1055, 195) ),                         // life mixture
+        new Floor(wall_v::wood, sf::Vector2f(1055, 234)), // wooden wall
+        new Item(item_v::stained_glass, sf::Vector2f(1016, 273)) ,		    // stained glass
+        new Item(item_v::torch, sf::Vector2f(1055, 273))	        // fire torch
 	};
 	tools = tymW;
 
-	tools[ 0 ]->setTexture ( mag.zwroc_t ( typ_rz::blokada ) );
-	tools[ 1 ]->setTexture ( mag.zwroc_t ( typ_rz::dostep ) );
+	tools[ 0 ]->setTexture ( vault.get ( add_v::blockade ) );
+	tools[ 1 ]->setTexture ( vault.get ( add_v::access ) );
 
 	// building the this.wall strip
 	wall.setFillColor ( sf::Color::Blue );
@@ -269,7 +253,7 @@ void Creator::update()
 			}
 
 			// using an object
-			else if ( !currentTool && tiles[ mouseTilePos ].czyRzecz ( ) )
+			else if ( !currentTool && currentBoard->hasItemOnSquare(mouseTilePos) )
 			{
 				useObject ( );
 			}
@@ -294,8 +278,7 @@ void Creator::update()
 	if ( isDestroyer )
 	{
 		for (int a = 0; a < tilesCounter; a++)
-			tiles[ a ].reset ( );
-
+            currentBoard->resetSquare(mouseTilePos);
 		isDestroyer = 0;
 
 		delete[] blockades;
@@ -308,7 +291,7 @@ void Creator::update()
 	// move the tool
 	if ( currentTool )
 	{
-		currentTool->setPosition ( currentBoard->getCoordinatesOfSquare ( mouseTilePos ) );
+		currentTool->setPosition ( currentBoard->getCoordinatesOnSquare ( mouseTilePos ) );
 	}
 }
 
@@ -316,7 +299,7 @@ void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 {
 	if ( currentTool )	// if a tool is chosen, it will be added to the chest
 	{
-		currentChest->dodajRzecz ( *currentTool );
+        currentTool->putInto(currentChest);
 	}
 	else				// otherwise a tool will be removed from the chest
 	{
@@ -331,7 +314,7 @@ void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 
 int Creator::findBlockadeIndex ( int tileNumber )
 {
-	const sf::Vector2f tileCoordinates = currentBoard->getCoordinatesOfSquare ( tileNumber );
+	const sf::Vector2f tileCoordinates = currentBoard->getCoordinatesOnSquare ( tileNumber );
 	for (int a = 0; a < blockadesCounter; a++ )
 	{
 		if ( tileCoordinates == blockades[ a ].getPosition ( ) )
@@ -369,7 +352,7 @@ void Creator::render()
 
 	for (auto w : tools)
 	{
-		window.draw(w->zwrocSpr());
+        w->drawOn(window);
 	}
 
 	// drawing the tiles
@@ -378,13 +361,13 @@ void Creator::render()
 	// drawing the chest window if open
 	if (currentChest)
 	{
-		currentChest->pokazWnetrze(window);
+		currentChest->showWindow(window);
 	}
 
 	// drawing the tool
 	if (currentTool && sf::Mouse::getPosition(window).x < 1092)
 	{
-		window.draw(currentTool->zwrocSpr());
+        currentTool->drawOn(window);
 	}
 
 
@@ -556,7 +539,7 @@ void Creator::wczytajBlok()
 			pB >> pozB.x >> pozB.y >> z;
 			blockades[a].init(pozB);
 			blockades[a].zmienBlok(z);
-			blockades[a].zmienTeksture(mag.zwroc_t(z));
+			blockades[a].zmienTeksture(mag.get(z));
 		}
 		pB.close();
 	}
@@ -571,7 +554,7 @@ void Creator::fillTile()
 {
 	if (currentChest)
 	{
-		currentChest->zamknij();
+		currentChest->close();
 		currentChest = nullptr;
 	}
 
@@ -587,7 +570,7 @@ void Creator::chooseTool ( sf::Vector2f& mouseCoordinates )
 {
 	for (int i = 0; i < toolsCounter; i++)
 	{
-		if ( tools[ i ]->czyMysz ( mouseCoordinates ) )
+		if ( tools[ i ]->contains ( mouseCoordinates ) )
 		{
 			/*
 			if (currentChest)
@@ -597,7 +580,7 @@ void Creator::chooseTool ( sf::Vector2f& mouseCoordinates )
 			}
 			*/
 			if (currentTool != nullptr ) delete currentTool;
-			currentTool = tools[i]->stworzWg();
+			currentTool = tools[i];
 			isBlockade = 0;
 			if (i <= 1) // wybranie blokady
 			{
@@ -617,7 +600,7 @@ void Creator::rubSquare ()
 {
 	if (currentChest)
 	{
-		currentChest->zamknij();
+		currentChest->close();
 		currentChest = nullptr;
 	}
 	currentBoard->resetSquare ( mouseTilePos );

@@ -1,8 +1,8 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include "Tmagazyn.h"
+#include "Vault.h"
 
-extern Tmagazyn mag;
+extern Vault vault;
 
 #endif

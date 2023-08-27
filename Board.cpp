@@ -45,7 +45,7 @@ typ_akc Board::useItemOnSquare ( int index )
 	return squares[ index ].useItem ( );
 }
 
-sf::Vector2f Board::getCoordinatesOfSquare ( int index )
+sf::Vector2f Board::getCoordinatesOnSquare ( int index )
 {
 	return squares[ index ].getPosition ( );
 }
@@ -59,7 +59,11 @@ int Board::findMousePos ( sf::Vector2f mouseCoordinates )
 	return -1;
 }
 
-bool Board::getAddAccessOfTile ( int index )
+bool Board::hasItemOnSquare(int index) const {
+    return squares[index].hasItem();
+}
+
+bool Board::getAddAccessOnSquare ( int index )
 {
 	return squares[index].getAddAccess();
 }
@@ -86,4 +90,13 @@ void Board::setSquare ( int index, Tile* target )
 void Board::setSquare ( int index, Item* target )
 {
 	squares[ index ] << target;
+}
+
+void Board::setSquare ( int index, Placeable* target )
+{
+    if (dynamic_cast<Item*>(target) != nullptr) {
+        setSquare(index, dynamic_cast<Item*>(target));
+    } else if (dynamic_cast<Tile*>(target) != nullptr) {
+        setSquare(index, dynamic_cast<Tile*>(target));
+    }
 }
