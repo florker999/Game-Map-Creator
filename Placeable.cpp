@@ -3,7 +3,6 @@
 Placeable::Placeable ( ) {
     entity.setSize(sf::Vector2f(39, 39));
     entity.setOrigin(0, 39);
-    entity.setFillColor(sf::Color::Transparent);
 }
 
 Placeable::Placeable( sf::Texture& texture, sf::Vector2f coordinates ) : Placeable() {
