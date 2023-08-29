@@ -1,10 +1,11 @@
 #pragma once
 #include "SFML/Graphics.hpp"
 #include "Placeable.h"
-#include "typy.h"
+#include "Variants.h"
 #include "global.h"
 #include "Tile.h"
 #include "Item.h"
+#include "Floor.h"
 
 class Square
 {
@@ -24,7 +25,7 @@ public:
 
 	sf::Vector2f getPosition ( );
 
-	typ_akc useItem ( );
+	action_v useItem ( );
 	Item* getItem ( );
 
 	bool contains ( sf::Vector2f point );

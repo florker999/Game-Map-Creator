@@ -22,7 +22,7 @@ public:
     
     void putInto ( Chest* container ) override;
 
-    virtual action_v use() = 0;
+    virtual action_v use ( ) { return action_v::nothing; };
 };
 
 #endif

@@ -6,7 +6,7 @@ Placeable::Placeable ( ) {
     entity.setFillColor(sf::Color::Transparent);
 }
 
-Placeable::Placeable( sf::Texture& texture, sf::Vector2f& coordinates ) : Placeable() {
+Placeable::Placeable( sf::Texture& texture, sf::Vector2f coordinates ) : Placeable() {
     setTexture(texture);
     setPosition(coordinates);
 }

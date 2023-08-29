@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Item.h"
-#include "typy.h"
+#include "Variants.h"
 #include "global.h"
 
 class Mixture :
@@ -11,9 +11,8 @@ private:
 
 public:
     Mixture() : Item() {}
-    Mixture( sf::Vector2f poz ) : Item( poz ) { setTexture(vault.get(typ_rz::mikstura_zycia)); }
+    Mixture( sf::Vector2f poz ) : Item( vault.get ( mixture_v::health ), poz ) { }
 
-    Item* stworzWg() const override;
-    typ_akc use() override { return typ_akc::nic; }
+    action_v use() override { return action_v::nothing; }
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "Tile.h"
-#include "typy.h"
+#include "Variants.h"
 #include "Square.h"
 #include "Item.h"
 
@@ -23,7 +23,7 @@ public:
 
 	Board* addBoard ( int direction );
 	Item* getItemOnSquare ( int index );
-	typ_akc useItemOnSquare ( int index );
+	action_v useItemOnSquare ( int index );
 
 	sf::Vector2f getCoordinatesOnSquare ( int index );
 

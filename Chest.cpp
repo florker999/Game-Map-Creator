@@ -1,25 +1,18 @@
 #include "Chest.h"
 #include <iostream>
 
-Chest::Chest(const Chest& inna) : Item()
+Chest::Chest ( const Chest& inna ) : Item ( ), window ( ChestWindow ( inna.capacity ) )
 {
-	content = new ChestWindow(inna.capacity);
     capacity = inna.capacity;
 	isOpen = inna.isOpen;
 }
 
-Chest::Chest(chest_v type) : Item(vault.get(type)) {
+Chest::Chest ( chest_v type ) : Item ( vault.get ( type ) ), window ( 9 ) {
 }
 
-Chest::Chest( sf::Vector2f coordinates, chest_v chest_v, bool big, Item* newContent ) :
-	Item(vault.get(chest_v), coordinates), isOpen(false), content(new ChestWindow(capacity, newContent)), capacity(big == false ? 4 : 9)
+Chest::Chest( chest_v type, sf::Vector2f coordinates, bool big, Item* newContent ) :
+	Item(vault.get(type), coordinates), isOpen(false), window(ChestWindow(capacity, newContent)), capacity(big == false ? 4 : 9)
 {
-}
-
-Chest::~Chest()
-{
-	if (content != nullptr)
-		delete content;
 }
 
 Chest* Chest::getChest ( )
@@ -29,20 +22,17 @@ Chest* Chest::getChest ( )
 
 Item* Chest::takeOut(sf::Vector2f mouseCoordinates)
 {
-	return content->takeOut(mouseCoordinates);
+	return window.takeOut(mouseCoordinates);
 }
 
-void Chest::store(const Item& item)
+void Chest::store(Item& item)
 {
-	if ( content != nullptr )
-		content = new ChestWindow();
-
-	content->store(item);
+	window.store(item);
 }
 
 void Chest::showWindow (sf::RenderWindow& okno)
 {
-	content->pokazWnetrze(okno);
+	window.drawOn(okno);
 }
 
 action_v Chest::use()
@@ -60,5 +50,5 @@ action_v Chest::use()
 }
 
 bool Chest::containsChestWindow(sf::Vector2f mouseCoordinates) {
-    return content->czyMysz(mouseCoordinates);
+    return window.contains(mouseCoordinates);
 }

@@ -11,7 +11,7 @@ class Chest :
 
 private:
 
-    ChestWindow* content;
+    ChestWindow window;
 
     bool isOpen; // 0 - zamknieta, 1 - otwarta
     int capacity;
@@ -20,21 +20,20 @@ public:
     
     Chest(const Chest& targetChest);
     Chest(chest_v type);
-    Chest( sf::Vector2f coordinates, chest_v m = chest_v::wooden, bool big = false, Item* newContent = nullptr);
-    ~Chest();
+    Chest( chest_v type, sf::Vector2f coordinates, bool big = false, Item* newContent = nullptr);
 
     Chest* getChest ( );
 
     Item* takeOut(sf::Vector2f mouseCoordinates);
 
-    void store(const Item& nowa);
-    void close() { stan = 0; }
-    void open() { stan = 1; if(zawartosc) zawartosc->otwarcie(getPosition()); }
+    void store(Item& nowa);
+    void close() { isOpen = false; }
+    void open() { isOpen = true; window.setPosition(getPosition()); }
     void showWindow(sf::RenderWindow& okno);
 
     bool containsChestWindow(sf::Vector2f mouseCoordinates);
 
-    typ_akc use() override;
+    action_v use() override;
 };
 
 #endif

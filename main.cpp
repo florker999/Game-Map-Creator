@@ -10,6 +10,8 @@
 #include "global.h"
 #include "Tile.h"
 #include "Board.h"
+#include "Blockade.h"
+#include "Door.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 
@@ -71,7 +73,7 @@ private:
 	bool blockadeType;	// rodzaj blokady
 	bool key;
 
-	typ_akc action;
+	action_v action;
 
 	int mouseTilePos;
 	int blockadesCounter;
@@ -89,23 +91,23 @@ Creator::Creator ( ) :
 	window ( sf::VideoMode ( 1094, 624, 32 ), "Map creator", sf::Style::Close ),
 	isLpm ( 0 ), isPpm ( 0 ), mouseTilePos ( 0 ), isRubber ( 0 ), isDestroyer ( 0 ), key ( 0 ), isBlockade ( 0 ),
 	blockades ( nullptr ), blockadesCounter ( 0 ), blockadeType ( 0 ), currentTool ( nullptr ), currentChest ( nullptr ),
-	action ( typ_akc::nic ), boardsCounter ( 1 ), currentBoard ( new Board ( tilesCounter ) )
+	action ( action_v::nothing ), boardsCounter ( 1 ), currentBoard ( new Board ( tilesCounter ) )
 {
 	// setting the tools/floors/objects to take
 	std::vector<Placeable*> tymW =
 	{
-        new Floor(add_v::blockade, sf::Vector2f(1016, 39)) ,		// blockade
-        new Floor(add_v::access, sf::Vector2f(1055, 39)) ,		// access
+		new Blockade ( add_v::blockade, sf::Vector2f ( 1016, 39 ) ) ,		// blockade
+		new Blockade ( add_v::access, sf::Vector2f ( 1055, 39 ) ) ,		// access
         new Floor(floor_v::grass, sf::Vector2f(1016, 78)) ,		// grass
         new Chest(chest_v::wooden, sf::Vector2f(1055, 78)) ,	        // chest
         new Chest(chest_v::wooden, sf::Vector2f(1016, 117), true) ,     // big chest
-        new Floor(floor_v::water, sf::Vector2f(1016, 156), 0) ,		// water
+        new Floor(floor_v::water, sf::Vector2f(1016, 156)) ,		// water
         new Floor(wall_v::cobelstone, sf::Vector2f(1055, 156)) ,		    // cobbelstone wall
-        new Item(door_v::wooden, sf::Vector2f(1016, 234)) ,	    // wooden door
+        new Door(door_v::wooden, sf::Vector2f(1016, 234)) ,	    // wooden door
         new Mixture( sf::Vector2f(1055, 195) ),                         // life mixture
         new Floor(wall_v::wood, sf::Vector2f(1055, 234)), // wooden wall
-        new Item(item_v::stained_glass, sf::Vector2f(1016, 273)) ,		    // stained glass
-        new Item(item_v::torch, sf::Vector2f(1055, 273))	        // fire torch
+        //new Item(item_v::stained_glass, sf::Vector2f(1016, 273)) ,		    // stained glass
+        //new Item(item_v::torch, sf::Vector2f(1055, 273))	        // fire torch
 	};
 	tools = tymW;
 
@@ -235,7 +237,7 @@ void Creator::update()
 		if ( mouseCoordinates.x < 1014 )
 		{
 			// filling a tile
-			if ( currentTool && !isBlockade && ( ( currentChest && !currentChest->czyMyszOkno ( mouseCoordinates ) ) || !currentChest ) )
+			if ( currentTool && !isBlockade && ( ( currentChest && !currentChest->containsChestWindow ( mouseCoordinates ) ) || !currentChest ) )
 			{
 				fillTile ( );
 			}
@@ -259,7 +261,7 @@ void Creator::update()
 			}
 
 			// add or remove an item from a chest
-			else if ( currentChest && currentChest->czyMyszOkno ( mouseCoordinates ) ) // jesli skrzynia jest otwarta
+			else if ( currentChest && currentChest->containsChestWindow ( mouseCoordinates ) ) // jesli skrzynia jest otwarta
 			{
 				useChest ( mouseCoordinates );
 			}
@@ -303,7 +305,7 @@ void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 	}
 	else				// otherwise a tool will be removed from the chest
 	{
-		if ( Item* wsk = currentChest->wyjmijRzecz ( mouseCoordinates ) )
+		if ( Item* wsk = currentChest->takeOut ( mouseCoordinates ) )
 		{
 			delete currentTool;
 			currentTool = wsk;
@@ -329,11 +331,11 @@ void Creator::useObject ( )
 
 	switch ( action )
 	{
-	case typ_akc::otw_skrz:
+	case action_v::open_ch:
 		currentChest = dynamic_cast< Chest* >( currentBoard->getItemOnSquare ( mouseTilePos ) );
 		break;
 
-	case typ_akc::zamk_skrz:
+	case action_v::close_ch:
 		currentChest = nullptr;
 		break;
 
@@ -341,7 +343,7 @@ void Creator::useObject ( )
 		break;
 	}
 	isLpm = 0;
-	action = typ_akc::nic;
+	action = action_v::nothing;
 }
 
 void Creator::render()

@@ -18,6 +18,10 @@ Floor::Floor(floor_v type, sf::Vector2f position) : Tile(vault.get(type), positi
     }
 }
 
+Floor::Floor(wall_v type, sf::Vector2f position): Tile(vault.get(type), position)
+{
+}
+
 bool Floor::isWalkable() {
     return walkability;
 }

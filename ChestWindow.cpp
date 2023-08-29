@@ -45,7 +45,7 @@ void ChestWindow::drawSlotsOn(sf::RenderWindow &window) {
     }
 }
 
-Slot *ChestWindow::findSlot(sf::Vector2f coordinates) {
+ChestWindow::Slot* ChestWindow::findSlot(sf::Vector2f coordinates) {
     for (int i = 0; i < slotsNumber; i++) {
         if (slots[i].contains(coordinates)) return slots+i;
     }
@@ -78,6 +78,12 @@ void ChestWindow::drawOn(sf::RenderWindow& window)
     position(sf::Vector2f(window.getPosition()));
 	window.draw(this->window);
     drawSlotsOn(window);
+}
+
+void ChestWindow::setPosition(sf::Vector2f position)
+{
+    window.setPosition(position);
+    setSlotsPosition();
 }
 
 bool ChestWindow::contains(sf::Vector2f coordinates)

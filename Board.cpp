@@ -40,7 +40,7 @@ Item* Board::getItemOnSquare ( int index )
 	return squares[ index ].getItem ( );
 }
 
-typ_akc Board::useItemOnSquare ( int index )
+action_v Board::useItemOnSquare ( int index )
 {
 	return squares[ index ].useItem ( );
 }

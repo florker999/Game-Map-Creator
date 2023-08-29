@@ -1,5 +1,5 @@
 #include "Tile.h"
-#include "typy.h"
+#include "Variants.h"
 #include "global.h"
 
 Tile::Tile() : Placeable()

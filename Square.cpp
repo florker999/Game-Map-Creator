@@ -8,12 +8,12 @@ sf::RectangleShape Square::accessEntity{ sf::Vector2f ( 39, 39 ) };
 
 Square::Square ( ) : item ( nullptr ), otherItems ( nullptr ), otherItemsCounter ( 0 ), additionalAccess ( nullptr )
 {
-	mainTile = new Tile;
+	mainTile = new Floor ( floor_v::empty );
 }
 
 Square::Square ( Tile* targetTile, Item* targetItem )
 {
-	mainTile = new Tile ( *targetTile );
+	mainTile = new Floor ( *dynamic_cast< Floor* >( targetTile ) );
 	item = targetItem;
 	otherItems = nullptr;
 	otherItemsCounter = 0;
@@ -25,10 +25,10 @@ sf::Vector2f Square::getPosition ( )
 	return mainTile->getPosition();
 }
 
-typ_akc Square::useItem ( )
+action_v Square::useItem ( )
 {
 	if ( item != nullptr ) return item->use ( );
-	return typ_akc::nic;
+	return action_v::nothing;
 }
 
 Item* Square::getItem ( )
@@ -56,7 +56,7 @@ void Square::reset ( )
 	if ( mainTile != nullptr )
 	{
 		delete mainTile;
-		mainTile = new Tile ( oldPos );
+		mainTile = new Floor ( floor_v::empty, oldPos );
 	}
 	if ( item != nullptr )
 	{
@@ -76,8 +76,8 @@ void Square::drawOn ( sf::RenderWindow& window )
 	mainTile->drawOn ( window );
     if (item != nullptr ) item->drawOn(window);
 	if ( additionalAccess != nullptr ) {
-		if ( *additionalAccess == true ) accessEntity.setTexture ( &mag.get ( 1 ) );
-		else accessEntity.setTexture ( &mag.get ( 0 ) );
+		if ( *additionalAccess == true ) accessEntity.setTexture ( &vault.get ( add_v::access ) );
+		else accessEntity.setTexture ( &vault.get ( add_v::blockade ) );
 		accessEntity.setPosition ( mainTile->getPosition ( ) );
 		window.draw ( accessEntity );
 	}
@@ -99,7 +99,7 @@ void Square::operator<<( Tile* target )
 		delete additionalAccess;
 		additionalAccess = nullptr;
 	}
-	mainTile = new Tile(*target);
+	mainTile = new Floor ( *dynamic_cast< Floor* >( target ) );
 }
 
 void Square::operator<<( Item* target )
@@ -113,5 +113,5 @@ void Square::operator<<( Item* target )
 		delete additionalAccess;
 		additionalAccess = nullptr;
 	}
-	item = target->stworzWg ( );
+	item = target;
 }

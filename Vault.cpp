@@ -81,6 +81,28 @@ sf::Texture& Vault::get(item_v type)
 	}
 }
 
+sf::Texture& Vault::get ( door_v type)
+{
+	switch ( type )
+	{
+	case door_v::wooden:
+		return textures[ 15 ];
+
+	default:
+		break;
+	}
+}
+
+sf::Texture& Vault::get ( mixture_v type )
+{
+	switch ( type )
+	{
+	case mixture_v::health:
+	default:
+		return textures[ 17 ];
+	}
+}
+
 sf::Texture& Vault::get(character_v type)
 {
 	switch (type) {
@@ -122,6 +144,19 @@ sf::Texture& Vault::get(floor_v type)
     default:
         return pusty;
     }
+}
+sf::Texture& Vault::get ( wall_v type )
+{
+	switch ( type ) {
+	case wall_v::wood:
+		return textures[ 18 ];
+
+	case wall_v::cobelstone:
+		return textures[ 6 ];
+
+	default:
+		return pusty;
+	}
 }
 /*
 sf::Texture& Vault::get(typ_pod typ)

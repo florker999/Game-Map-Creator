@@ -13,25 +13,25 @@ class ChestWindow
         Item* item = nullptr;
         int counter = 0;
         sf::RectangleShape square;
-        
+
     public:
-        Slot() { square.setSize((39, 39)); square.setOrigin(0, 39); }
-        void setPosition(sf::Vector2f coordinates) {
-            square.setPosition(coordinates);
-            if (item) item->setPosition(coordinates);
+        Slot ( ) { square.setSize ( sf::Vector2f{ 39, 39 } ); square.setOrigin ( 0, 39 ); }
+        void setPosition ( sf::Vector2f coordinates ) {
+            square.setPosition ( coordinates );
+            if ( item ) item->setPosition ( coordinates );
         }
-        
-        void setItem( const Item* newItem ) { item = newItem; }
-        void drawOn (sf::RenderWindow& window) { if(item) item->drawOn(window); }
-        Item* popItem() { Item* tempItem = item; item = nullptr; return tempItem; }
-        bool hasItem() { return item == nullptr ? false : true};
-        bool contains(sf::Vector2f coordinates) { return square.getGlobalBounds().contains(coordinates); }
-        sf::Vector2f getPosition() { return square.getPosition(); }
-    }
+
+        void setItem ( Item* newItem ) { item = newItem; }
+        void drawOn ( sf::RenderWindow& window ) { if ( item ) item->drawOn ( window ); }
+        Item* popItem ( ) { Item* tempItem = item; item = nullptr; return tempItem; }
+        bool hasItem ( ) { return item == nullptr ? false : true; };
+        bool contains ( sf::Vector2f coordinates ) { return square.getGlobalBounds ( ).contains ( coordinates ); }
+        sf::Vector2f getPosition ( ) { return square.getPosition ( ); }
+    };
 
 private:
     Slot* slots;
-    static sf::RectangleShape window;
+    static sf::Sprite window;
     int slotsNumber;
     
     void setSlotsPosition ();
@@ -45,12 +45,13 @@ public:
     ChestWindow(int slotsNumber, Item* newContent);
     ~ChestWindow();
 
-    void store(Item& nowa);
     void position(sf::Vector2f start);
     void drawOn(sf::RenderWindow& okno);
+    void setPosition ( sf::Vector2f position );
     
     bool contains(sf::Vector2f coordinates);
 
+    Item* store(Item& nowa);
     Item* takeOut(sf::Vector2f coordinates);
 };
 
