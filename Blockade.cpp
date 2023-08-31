@@ -10,3 +10,8 @@ bool Blockade::isBlocking ( )
 {
     return blockability;
 }
+
+Placeable* Blockade::createCopy()
+{
+    return new Blockade( *this );
+}

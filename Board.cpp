@@ -94,9 +94,9 @@ void Board::setSquare ( int index, Item* target )
 
 void Board::setSquare ( int index, Placeable* target )
 {
-    if (dynamic_cast<Item*>(target) != nullptr) {
-        setSquare(index, dynamic_cast<Item*>(target));
+	if ( dynamic_cast< Item* >( target ) != nullptr ) {
+		setSquare ( index, dynamic_cast< Item* >( target ) );
     } else if (dynamic_cast<Tile*>(target) != nullptr) {
-        setSquare(index, dynamic_cast<Tile*>(target));
+		setSquare ( index, dynamic_cast< Tile* >( target ) );
     }
 }

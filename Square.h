@@ -14,6 +14,8 @@ private:
 	Item* item;
 	Item* otherItems;
 
+	sf::RectangleShape position;
+
 	// nullptr by default | 0 - blockade | 1 - access
 	static sf::RectangleShape accessEntity;
 	bool* additionalAccess;

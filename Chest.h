@@ -34,6 +34,8 @@ public:
     bool containsChestWindow(sf::Vector2f mouseCoordinates);
 
     action_v use() override;
+
+    Placeable* createCopy ( );
 };
 
 #endif

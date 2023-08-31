@@ -1,7 +1,13 @@
 #include "Floor.h"
 #include <iostream>
 
-Floor::Floor(floor_v type, sf::Vector2f position) : Tile(vault.get(type), position)
+Floor::Floor ( const Floor& target ) : Tile ( vault.get ( target.type ), target.getPosition ( ) )
+{
+    type = target.type;
+    walkability = target.walkability;
+}
+
+Floor::Floor ( floor_v type, sf::Vector2f position ) : Tile ( vault.get ( type ), position ), type ( type )
 {
     switch (type)
     {
@@ -18,8 +24,9 @@ Floor::Floor(floor_v type, sf::Vector2f position) : Tile(vault.get(type), positi
     }
 }
 
-Floor::Floor(wall_v type, sf::Vector2f position): Tile(vault.get(type), position)
+Placeable* Floor::createCopy ( )
 {
+    return new Floor ( *this );
 }
 
 bool Floor::isWalkable() {

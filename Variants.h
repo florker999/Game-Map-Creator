@@ -2,7 +2,7 @@
 #define VARIANTS_H
 
 enum class floor_v	{ empty, grass, water };
-enum class wall_v   { wood, cobelstone };
+enum class wall_v   { empty, wood, cobelstone };
 enum class door_v   { wooden };
 enum class chest_v  { wooden };
 enum class mixture_v { health, poison };

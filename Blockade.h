@@ -13,5 +13,6 @@ public:
     bool isBlocking ( );
     void putInto ( Chest* container ) {};
 
+    Placeable* createCopy ( ) override;
 };
 

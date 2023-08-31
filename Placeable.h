@@ -12,6 +12,8 @@ protected:
 public:
     Placeable( );
     Placeable ( sf::Texture& texture, sf::Vector2f coordinates = sf::Vector2f ( 0, 0 ) );
+
+    virtual Placeable* createCopy (  ) = 0;
     
     void drawOn (sf::RenderWindow& window) const;
 	void setTexture ( const sf::Texture& t );

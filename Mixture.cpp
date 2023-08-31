@@ -1,6 +1,6 @@
 #include "Mixture.h"
 
-Item* Mixture::stworzWg() const
+Placeable* Mixture::createCopy()
 {
-    return new Mixture(*this);
+    return new Mixture ( *this );
 }

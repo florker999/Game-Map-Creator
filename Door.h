@@ -6,5 +6,7 @@ class Door :
 {
 public:
     Door ( door_v type, sf::Vector2f position = sf::Vector2f ( 0, 0 ) );
+
+    Placeable* createCopy ( );
 };
 

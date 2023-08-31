@@ -18,7 +18,7 @@ public:
 
 	Item(const Item& rz) = default;
 	Item(Item&& rz) = default;
-    Item( sf::Texture& texture, sf::Vector2f coordinates = sf::Vector2f(0, 0) );
+    Item ( sf::Texture& texture, sf::Vector2f coordinates = sf::Vector2f ( 0, 0 ) );
     
     void putInto ( Chest* container ) override;
 

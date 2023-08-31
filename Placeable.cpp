@@ -1,8 +1,9 @@
 #include "Placeable.h"
 
-Placeable::Placeable ( ) {
-    entity.setSize(sf::Vector2f(39, 39));
+Placeable::Placeable ( ) : entity{ sf::Vector2f{39, 39} }
+{
     entity.setOrigin(0, 39);
+    entity.setTexture ( NULL );
 }
 
 Placeable::Placeable( sf::Texture& texture, sf::Vector2f coordinates ) : Placeable() {

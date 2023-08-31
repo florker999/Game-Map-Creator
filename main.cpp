@@ -12,6 +12,7 @@
 #include "Board.h"
 #include "Blockade.h"
 #include "Door.h"
+#include "Wall.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 
@@ -35,7 +36,7 @@ public:
 	std::vector<Placeable*> tools;
 
 	// chosen tool pointer
-	Placeable *currentTool;
+	Placeable* currentTool;
 
 	// chosen chest pointer
 	Chest* currentChest;
@@ -98,14 +99,14 @@ Creator::Creator ( ) :
 	{
 		new Blockade ( add_v::blockade, sf::Vector2f ( 1016, 39 ) ) ,		// blockade
 		new Blockade ( add_v::access, sf::Vector2f ( 1055, 39 ) ) ,		// access
-        new Floor(floor_v::grass, sf::Vector2f(1016, 78)) ,		// grass
-        new Chest(chest_v::wooden, sf::Vector2f(1055, 78)) ,	        // chest
-        new Chest(chest_v::wooden, sf::Vector2f(1016, 117), true) ,     // big chest
-        new Floor(floor_v::water, sf::Vector2f(1016, 156)) ,		// water
-        new Floor(wall_v::cobelstone, sf::Vector2f(1055, 156)) ,		    // cobbelstone wall
-        new Door(door_v::wooden, sf::Vector2f(1016, 234)) ,	    // wooden door
-        new Mixture( sf::Vector2f(1055, 195) ),                         // life mixture
-        new Floor(wall_v::wood, sf::Vector2f(1055, 234)), // wooden wall
+		new Floor(floor_v::grass, sf::Vector2f(1016, 78)) ,		// grass
+		new Chest(chest_v::wooden, sf::Vector2f(1055, 78)) ,	        // chest
+		new Chest(chest_v::wooden, sf::Vector2f(1016, 117), true) ,     // big chest
+		new Floor(floor_v::water, sf::Vector2f(1016, 156)) ,		// water
+		new Wall(wall_v::cobelstone, sf::Vector2f(1055, 156)) ,		    // cobbelstone wall
+		new Door(door_v::wooden, sf::Vector2f(1016, 234)) ,	    // wooden door
+		new Mixture( sf::Vector2f(1055, 195) ),                         // life mixture
+		new Wall(wall_v::wood, sf::Vector2f(1055, 234)), // wooden wall
         //new Item(item_v::stained_glass, sf::Vector2f(1016, 273)) ,		    // stained glass
         //new Item(item_v::torch, sf::Vector2f(1055, 273))	        // fire torch
 	};
@@ -352,9 +353,9 @@ void Creator::render()
 	window.clear ( sf::Color::Black );
 	window.draw(wall);
 
-	for (auto w : tools)
+	for (auto tool : tools)
 	{
-        w->drawOn(window);
+        tool->drawOn(window);
 	}
 
 	// drawing the tiles
@@ -377,181 +378,6 @@ void Creator::render()
 	std::cout << check << " " << mouseTilePos << std::endl;
 }
 
-#if 0
-void Creator::zapisz()
-{
-	std::ofstream mapa("mapa.txt");
-	int b = 0;
-
-	// zapis typu podloza
-	for (int a = 0; a < 16; a++)
-	{
-		for (int a = 0; a < 26; a++)
-			mapa << static_cast<int>(tiles[b++].zwrocTypPod()) << " ";
-		mapa << '\n';
-	}
-
-	b = 0;
-	mapa << '\n';
-
-	// zapis typu obiektu
-	for (int a = 0; a < 16; a++)
-	{
-		for (int a = 0; a < 26; a++)
-			mapa << static_cast<int>(tiles[b++].zwrocTypOb()) << " ";
-		mapa << '\n';
-	}
-
-	b = 0;
-	mapa << '\n';
-
-	// zapis blokady
-	for (int a = 0; a < 16; a++)
-	{
-		for (int a = 0; a < 26; a++)
-			mapa << tiles[b++].zwrocBlokade() << " ";
-		mapa << '\n';
-	}
-
-	mapa.close();
-}
-
-void Creator::wczytaj()
-{
-	std::ifstream mapa("mapa.txt");
-
-	typ_pod tp;
-	typ_ob to;
-
-	int b;
-	int i = 0;
-	bool blok;
-
-	//wczytanie typu podloza
-	for (int a = 0; a < 26; a++)
-	{
-		for (int a = 0; a < 16; a++)
-		{
-			if (mapa.good())
-				mapa >> b;
-			else
-				b = 0;
-
-			switch (b)
-			{
-			case 1:
-				tp = typ_pod::trawa;
-				break;
-
-			case 2:
-				tp = typ_pod::woda;
-				break;
-
-			default:
-				tp = typ_pod::pusty;
-			}
-			tiles[i++].zmienTeksture(tp);
-		}
-	}
-
-	i = 0;
-
-	//wczytanie typu obiektu
-	for (int a = 0; a < 26; a++)
-	{
-		for (int a = 0; a < 16; a++)
-		{
-			if (mapa.good())
-				mapa >> b;
-			else
-				b = 0;
-
-			switch (b)
-			{
-			case 1:
-				to = typ_ob::skrzynia;
-				break;
-
-			case 2:
-				to = typ_ob::dSkrzynia;
-				break;
-
-			case 3:
-				to = typ_ob::cobel;
-				break;
-
-			case 4:
-				to = typ_ob::drzwi_drew;
-				break;
-
-			default:
-				to = typ_ob::pusty;
-			}
-			tiles[i++].zmienTeksture(to);
-		}
-	}
-
-	i = 0;
-	//wczytanie blokady
-	if (!mapa.good())
-	{
-		for (int a = 0; a < 416; a++)
-			tiles[a].zmienBlok(1);
-	}
-	else
-	{
-		for (int a = 0; a < 26; a++)
-		{
-			for (int a = 0; a < 16; a++)
-			{
-				mapa >> blok;
-				tiles[i++].zmienBlok(blok);
-
-			}
-		}
-	}
-
-	mapa.close();
-}
-
-void Creator::zapiszBlok()
-{
-	if (blockadesCounter)
-	{
-		std::ofstream pB("specBlok.txt");
-		pB << blockadesCounter << '\n';
-		for (int a = 0; a < blockadesCounter; a++)
-			pB << blockades[a].zwrocPoz().x << " " << blockades[a].zwrocPoz().y << " " << blockades[a].zwrocBlokade() << '\n';
-		pB.close();
-	}
-}
-
-void Creator::wczytajBlok()
-{
-	std::ifstream pB;
-	pB.open("specBlok.txt");
-	if (pB.good())
-	{
-		pB >> blockadesCounter;
-		blockades = new Tile[blockadesCounter];
-		for (int a = 0; a < blockadesCounter; a++)
-		{
-			sf::Vector2f pozB;
-			bool z;
-			pB >> pozB.x >> pozB.y >> z;
-			blockades[a].init(pozB);
-			blockades[a].zmienBlok(z);
-			blockades[a].zmienTeksture(mag.get(z));
-		}
-		pB.close();
-	}
-}
-
-
-
-
-#endif // 0
-/////////////////////////////////////
 void Creator::fillTile()
 {
 	if (currentChest)
@@ -582,7 +408,7 @@ void Creator::chooseTool ( sf::Vector2f& mouseCoordinates )
 			}
 			*/
 			if (currentTool != nullptr ) delete currentTool;
-			currentTool = tools[i];
+			currentTool = tools[i]->createCopy();
 			isBlockade = 0;
 			if (i <= 1) // wybranie blokady
 			{
@@ -614,3 +440,179 @@ int main()
 	Creator.run();
 	return check;
 }
+
+#if 0
+void Creator::zapisz ( )
+{
+	std::ofstream mapa ( "mapa.txt" );
+	int b = 0;
+
+	// zapis typu podloza
+	for ( int a = 0; a < 16; a++ )
+	{
+		for ( int a = 0; a < 26; a++ )
+			mapa << static_cast< int >( tiles[ b++ ].zwrocTypPod ( ) ) << " ";
+		mapa << '\n';
+	}
+
+	b = 0;
+	mapa << '\n';
+
+	// zapis typu obiektu
+	for ( int a = 0; a < 16; a++ )
+	{
+		for ( int a = 0; a < 26; a++ )
+			mapa << static_cast< int >( tiles[ b++ ].zwrocTypOb ( ) ) << " ";
+		mapa << '\n';
+	}
+
+	b = 0;
+	mapa << '\n';
+
+	// zapis blokady
+	for ( int a = 0; a < 16; a++ )
+	{
+		for ( int a = 0; a < 26; a++ )
+			mapa << tiles[ b++ ].zwrocBlokade ( ) << " ";
+		mapa << '\n';
+	}
+
+	mapa.close ( );
+}
+
+void Creator::wczytaj ( )
+{
+	std::ifstream mapa ( "mapa.txt" );
+
+	typ_pod tp;
+	typ_ob to;
+
+	int b;
+	int i = 0;
+	bool blok;
+
+	//wczytanie typu podloza
+	for ( int a = 0; a < 26; a++ )
+	{
+		for ( int a = 0; a < 16; a++ )
+		{
+			if ( mapa.good ( ) )
+				mapa >> b;
+			else
+				b = 0;
+
+			switch ( b )
+			{
+			case 1:
+				tp = typ_pod::trawa;
+				break;
+
+			case 2:
+				tp = typ_pod::woda;
+				break;
+
+			default:
+				tp = typ_pod::pusty;
+			}
+			tiles[ i++ ].zmienTeksture ( tp );
+		}
+	}
+
+	i = 0;
+
+	//wczytanie typu obiektu
+	for ( int a = 0; a < 26; a++ )
+	{
+		for ( int a = 0; a < 16; a++ )
+		{
+			if ( mapa.good ( ) )
+				mapa >> b;
+			else
+				b = 0;
+
+			switch ( b )
+			{
+			case 1:
+				to = typ_ob::skrzynia;
+				break;
+
+			case 2:
+				to = typ_ob::dSkrzynia;
+				break;
+
+			case 3:
+				to = typ_ob::cobel;
+				break;
+
+			case 4:
+				to = typ_ob::drzwi_drew;
+				break;
+
+			default:
+				to = typ_ob::pusty;
+			}
+			tiles[ i++ ].zmienTeksture ( to );
+		}
+	}
+
+	i = 0;
+	//wczytanie blokady
+	if ( !mapa.good ( ) )
+	{
+		for ( int a = 0; a < 416; a++ )
+			tiles[ a ].zmienBlok ( 1 );
+	}
+	else
+	{
+		for ( int a = 0; a < 26; a++ )
+		{
+			for ( int a = 0; a < 16; a++ )
+			{
+				mapa >> blok;
+				tiles[ i++ ].zmienBlok ( blok );
+
+			}
+		}
+	}
+
+	mapa.close ( );
+}
+
+void Creator::zapiszBlok ( )
+{
+	if ( blockadesCounter )
+	{
+		std::ofstream pB ( "specBlok.txt" );
+		pB << blockadesCounter << '\n';
+		for ( int a = 0; a < blockadesCounter; a++ )
+			pB << blockades[ a ].zwrocPoz ( ).x << " " << blockades[ a ].zwrocPoz ( ).y << " " << blockades[ a ].zwrocBlokade ( ) << '\n';
+		pB.close ( );
+	}
+}
+
+void Creator::wczytajBlok ( )
+{
+	std::ifstream pB;
+	pB.open ( "specBlok.txt" );
+	if ( pB.good ( ) )
+	{
+		pB >> blockadesCounter;
+		blockades = new Tile[ blockadesCounter ];
+		for ( int a = 0; a < blockadesCounter; a++ )
+		{
+			sf::Vector2f pozB;
+			bool z;
+			pB >> pozB.x >> pozB.y >> z;
+			blockades[ a ].init ( pozB );
+			blockades[ a ].zmienBlok ( z );
+			blockades[ a ].zmienTeksture ( mag.get ( z ) );
+		}
+		pB.close ( );
+	}
+}
+
+
+
+
+#endif // 0
+/////////////////////////////////////

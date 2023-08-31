@@ -1,13 +1,14 @@
 #include "Chest.h"
 #include <iostream>
 
-Chest::Chest ( const Chest& inna ) : Item ( ), window ( ChestWindow ( inna.capacity ) )
+Chest::Chest ( const Chest& inna ) : Item ( vault.get ( chest_v::wooden ), inna.getPosition ( ) ), window ( ChestWindow ( inna.capacity ) )
 {
     capacity = inna.capacity;
 	isOpen = inna.isOpen;
 }
 
-Chest::Chest ( chest_v type ) : Item ( vault.get ( type ) ), window ( 9 ) {
+Chest::Chest(chest_v type) : Item(vault.get(type)), window(9), capacity(9), isOpen(false)
+{
 }
 
 Chest::Chest( chest_v type, sf::Vector2f coordinates, bool big, Item* newContent ) :
@@ -47,6 +48,11 @@ action_v Chest::use()
 		close();
 		return action_v::close_ch;
 	}
+}
+
+Placeable* Chest::createCopy()
+{
+	return new Chest( *this );
 }
 
 bool Chest::containsChestWindow(sf::Vector2f mouseCoordinates) {
