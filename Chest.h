@@ -35,7 +35,7 @@ public:
 
     action_v use() override;
 
-    Placeable* createCopy ( );
+    Chest* createCopy ( );
 };
 
 #endif

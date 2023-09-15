@@ -14,11 +14,11 @@ class Item:
 private:
 
 public:
-	Item();
 
 	Item(const Item& rz) = default;
 	Item(Item&& rz) = default;
     Item ( sf::Texture& texture, sf::Vector2f coordinates = sf::Vector2f ( 0, 0 ) );
+    Item* createCopy ( );
     
     void putInto ( Chest* container ) override;
 

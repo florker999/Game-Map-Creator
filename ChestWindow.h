@@ -21,7 +21,7 @@ class ChestWindow
             if ( item ) item->setPosition ( coordinates );
         }
 
-        void setItem ( Item* newItem ) { item = newItem; }
+        void setItem ( Item* newItem ) { item = newItem->createCopy ( ); }
         void drawOn ( sf::RenderWindow& window ) { if ( item ) item->drawOn ( window ); }
         Item* popItem ( ) { Item* tempItem = item; item = nullptr; return tempItem; }
         bool hasItem ( ) { return item == nullptr ? false : true; };

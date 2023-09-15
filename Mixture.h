@@ -10,11 +10,11 @@ class Mixture :
 private:
 
 public:
-    Mixture() : Item() {}
+    Mixture ( ) = default;
     Mixture( sf::Vector2f poz ) : Item( vault.get ( mixture_v::health ), poz ) { }
 
     action_v use() override { return action_v::nothing; }
 
-    Placeable* createCopy ( );
+    Mixture* createCopy ( );
 };
 

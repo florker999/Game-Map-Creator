@@ -4,7 +4,7 @@ Door::Door ( door_v type, sf::Vector2f position ) : Item ( vault.get ( type ), p
 {
 }
 
-Placeable* Door::createCopy()
+Door* Door::createCopy()
 {
     return new Door ( *this );
 }

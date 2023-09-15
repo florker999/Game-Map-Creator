@@ -1,6 +1,6 @@
 #include "Mixture.h"
 
-Placeable* Mixture::createCopy()
+Mixture* Mixture::createCopy()
 {
     return new Mixture ( *this );
 }

@@ -59,7 +59,7 @@ bool ChestWindow::isItemInSlot(int index) {
 Item* ChestWindow::store( Item& newItem )
 {
     Item* returnItem = &newItem;
-    Slot* selectedSlot = findSlot(newItem.getPosition());
+    Slot* selectedSlot = findSlot ( newItem.getPosition ( ) );
     if (selectedSlot) {
         returnItem = selectedSlot->popItem();
         selectedSlot->setItem(&newItem);
@@ -75,7 +75,7 @@ void ChestWindow::position(sf::Vector2f start)
 
 void ChestWindow::drawOn(sf::RenderWindow& window)
 {
-    position(sf::Vector2f(window.getPosition()));
+    position(sf::Vector2f(this->window.getPosition()));
 	window.draw(this->window);
     drawSlotsOn(window);
 }

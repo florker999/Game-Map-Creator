@@ -50,7 +50,7 @@ action_v Chest::use()
 	}
 }
 
-Placeable* Chest::createCopy()
+Chest* Chest::createCopy()
 {
 	return new Chest( *this );
 }
