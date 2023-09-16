@@ -26,7 +26,7 @@ public:
 
     Item* takeOut(sf::Vector2f mouseCoordinates);
 
-    void store(Item& nowa);
+    void store(Item& nowa, sf::Vector2f coord);
     void close() { isOpen = false; }
     void open() { isOpen = true; window.setPosition(getPosition()); }
     void showWindow(sf::RenderWindow& okno);

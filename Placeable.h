@@ -18,7 +18,6 @@ public:
     void drawOn (sf::RenderWindow& window) const;
 	void setTexture ( const sf::Texture& t );
 	void setPosition ( const sf::Vector2f& p );
-    virtual void putInto ( Chest* container ) = 0;
     
     sf::Vector2f getPosition( ) const;
     

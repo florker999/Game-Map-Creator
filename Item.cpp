@@ -10,6 +10,6 @@ Item* Item::createCopy()
     return new Item(*this);
 }
 
-void Item::putInto( Chest* container ) {
-    container->store( *this );
+void Item::putInto( Chest* container, sf::Vector2f coord ) {
+    container->store( *this, coord );
 }

@@ -1,5 +1,6 @@
 #include "ChestWindow.h"
 #include "SFML/Graphics.hpp"
+#include <iostream>
  
 sf::Sprite ChestWindow::window = sf::Sprite(vault.get(add_v::chest_wdw));
 
@@ -46,7 +47,9 @@ void ChestWindow::drawSlotsOn(sf::RenderWindow &window) {
 }
 
 ChestWindow::Slot* ChestWindow::findSlot(sf::Vector2f coordinates) {
+    std::cout << "item x: " << coordinates.x << " y: " << coordinates.y << std::endl;
     for (int i = 0; i < slotsNumber; i++) {
+        std::cout << "slot x: " << slots[ i ].getPosition ( ).x << " y: " << slots[ i ].getPosition ( ).y << std::endl;
         if (slots[i].contains(coordinates)) return slots+i;
     }
     return nullptr;
@@ -56,10 +59,10 @@ bool ChestWindow::isItemInSlot(int index) {
     return slots[index].hasItem();
 }
 
-Item* ChestWindow::store( Item& newItem )
+Item* ChestWindow::store( Item& newItem, sf::Vector2f coord )
 {
     Item* returnItem = &newItem;
-    Slot* selectedSlot = findSlot ( newItem.getPosition ( ) );
+    Slot* selectedSlot = findSlot ( coord );
     if (selectedSlot) {
         returnItem = selectedSlot->popItem();
         selectedSlot->setItem(&newItem);

@@ -300,9 +300,9 @@ void Creator::update()
 
 void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 {
-	if ( currentTool )	// if a tool is chosen, it will be added to the chest
+	if ( dynamic_cast<Item*>( currentTool ))	// if a tool is chosen, it will be added to the chest
 	{
-        currentTool->putInto(currentChest);
+		dynamic_cast< Item* >( currentTool )->putInto(currentChest, sf::Vector2f(sf::Mouse::getPosition(window)));
 	}
 	else				// otherwise a tool will be removed from the chest
 	{
@@ -375,7 +375,7 @@ void Creator::render()
 
 
 	window.display();
-	std::cout << check << " " << mouseTilePos << std::endl;
+	//std::cout << check << " " << mouseTilePos << std::endl;
 }
 
 void Creator::fillTile()

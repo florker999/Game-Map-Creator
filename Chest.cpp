@@ -12,7 +12,7 @@ Chest::Chest(chest_v type) : Item(vault.get(type)), window(9), capacity(9), isOp
 }
 
 Chest::Chest( chest_v type, sf::Vector2f coordinates, bool big, Item* newContent ) :
-	Item(vault.get(type), coordinates), isOpen(false), window(ChestWindow(capacity, newContent)), capacity(big == false ? 4 : 9)
+	Item(vault.get(type), coordinates), isOpen(false), window(ChestWindow(capacity, newContent)), capacity(big == false ? 9 : 16)
 {
 }
 
@@ -26,9 +26,9 @@ Item* Chest::takeOut(sf::Vector2f mouseCoordinates)
 	return window.takeOut(mouseCoordinates);
 }
 
-void Chest::store(Item& item)
+void Chest::store(Item& item, sf::Vector2f coord)
 {
-	window.store(item);
+	window.store(item, coord);
 }
 
 void Chest::showWindow (sf::RenderWindow& okno)

@@ -51,7 +51,7 @@ public:
     
     bool contains(sf::Vector2f coordinates);
 
-    Item* store(Item& nowa);
+    Item* store(Item& nowa, sf::Vector2f);
     Item* takeOut(sf::Vector2f coordinates);
 };
 
