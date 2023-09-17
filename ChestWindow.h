@@ -21,8 +21,8 @@ class ChestWindow
             if ( item ) item->setPosition ( coordinates );
         }
 
-        void setItem ( Item* newItem ) { item = newItem->createCopy ( ); }
         void drawOn ( sf::RenderWindow& window ) { if ( item ) item->drawOn ( window ); }
+        Item* setItem ( Item& newItem );
         Item* popItem ( ) { Item* tempItem = item; item = nullptr; return tempItem; }
         bool hasItem ( ) { return item == nullptr ? false : true; };
         bool contains ( sf::Vector2f coordinates ) { return square.getGlobalBounds ( ).contains ( coordinates ); }

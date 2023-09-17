@@ -262,7 +262,7 @@ void Creator::update()
 			}
 
 			// add or remove an item from a chest
-			else if ( currentChest && currentChest->containsChestWindow ( mouseCoordinates ) ) // jesli skrzynia jest otwarta
+			else if ( currentChest && currentChest->containsChestWindow ( mouseCoordinates ) )
 			{
 				useChest ( mouseCoordinates );
 			}
@@ -300,18 +300,7 @@ void Creator::update()
 
 void Creator::useChest ( const sf::Vector2f& mouseCoordinates )
 {
-	if ( dynamic_cast<Item*>( currentTool ))	// if a tool is chosen, it will be added to the chest
-	{
-		dynamic_cast< Item* >( currentTool )->putInto(currentChest, sf::Vector2f(sf::Mouse::getPosition(window)));
-	}
-	else				// otherwise a tool will be removed from the chest
-	{
-		if ( Item* wsk = currentChest->takeOut ( mouseCoordinates ) )
-		{
-			delete currentTool;
-			currentTool = wsk;
-		}
-	}
+	currentTool = currentChest->clickedAt ( mouseCoordinates, dynamic_cast< Item* >( currentTool ) );
 	isLpm = 0;
 }
 

@@ -13,7 +13,7 @@ ChestWindow::ChestWindow(int slotsNumber, Item* newContent)
 {
     this->slotsNumber = slotsNumber;
     for (int i = 0; i < slotsNumber; i++) {
-        slots[i].setItem(newContent+i);
+        slots[i].setItem(newContent[i ] );
     }
 }
 
@@ -64,8 +64,7 @@ Item* ChestWindow::store( Item& newItem, sf::Vector2f coord )
     Item* returnItem = &newItem;
     Slot* selectedSlot = findSlot ( coord );
     if (selectedSlot) {
-        returnItem = selectedSlot->popItem();
-        selectedSlot->setItem(&newItem);
+        returnItem = selectedSlot->setItem(newItem);
     }
     return returnItem;
 }
@@ -102,4 +101,13 @@ Item* ChestWindow::takeOut(sf::Vector2f coordinates)
     } else {
         return nullptr;
     }
+}
+
+Item* ChestWindow::Slot::setItem ( Item& newItem ) 
+{ 
+    Item* returnItem = popItem ( );
+    item = newItem.createCopy ( ); 
+    if ( returnItem ) delete &newItem;
+    else returnItem = &newItem;
+    return returnItem;
 }

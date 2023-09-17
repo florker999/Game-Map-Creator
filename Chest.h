@@ -25,8 +25,8 @@ public:
     Chest* getChest ( );
 
     Item* takeOut(sf::Vector2f mouseCoordinates);
+    Item* clickedAt ( const sf::Vector2f& coordinates, Item* item = nullptr );
 
-    void store(Item& nowa, sf::Vector2f coord);
     void close() { isOpen = false; }
     void open() { isOpen = true; window.setPosition(getPosition()); }
     void showWindow(sf::RenderWindow& okno);

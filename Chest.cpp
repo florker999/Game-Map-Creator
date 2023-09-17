@@ -26,9 +26,13 @@ Item* Chest::takeOut(sf::Vector2f mouseCoordinates)
 	return window.takeOut(mouseCoordinates);
 }
 
-void Chest::store(Item& item, sf::Vector2f coord)
+Item* Chest::clickedAt ( const sf::Vector2f& coordinates, Item* item )
 {
-	window.store(item, coord);
+	if ( item )
+	{
+		return window.store ( *item, coordinates );
+	}
+	else return window.takeOut ( coordinates );
 }
 
 void Chest::showWindow (sf::RenderWindow& okno)
