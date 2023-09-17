@@ -12,6 +12,7 @@ private:
 
 	sf::Texture pusty;
 	sf::Texture* textures;
+	sf::Font* fonts;
 
 public:
 
@@ -24,6 +25,7 @@ public:
 	sf::Texture& get ( character_v );
 	sf::Texture& get ( add_v );
 	sf::Texture& get ( bool );
+	sf::Font& getFont ( );
 
 	Vault ( );
 	~Vault ( ) { delete[ ] textures; };

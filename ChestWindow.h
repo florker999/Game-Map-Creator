@@ -13,17 +13,31 @@ class ChestWindow
         Item* item = nullptr;
         int counter = 0;
         sf::RectangleShape square;
+        sf::Text counterText;
 
     public:
-        Slot ( ) { square.setSize ( sf::Vector2f{ 39, 39 } ); square.setOrigin ( 0, 39 ); }
+        Slot ( ) { square.setSize ( sf::Vector2f{ 39, 39 } ); square.setOrigin ( 0, 39 ); counterText.setFont ( vault.getFont ( ) ); counterText.setCharacterSize ( 15 ); counterText.setFillColor ( sf::Color::White ); }
         void setPosition ( sf::Vector2f coordinates ) {
             square.setPosition ( coordinates );
-            if ( item ) item->setPosition ( coordinates );
+            if ( item ) 
+            {
+                item->setPosition ( coordinates );
+                coordinates.y -= 39;
+                counterText.setPosition ( coordinates );
+                counterText.setString ( char(49+counter) );
+            }
         }
 
-        void drawOn ( sf::RenderWindow& window ) { if ( item ) item->drawOn ( window ); }
+        void drawOn ( sf::RenderWindow& window ) 
+        { 
+            if ( item ) 
+            {
+                item->drawOn ( window );
+                window.draw ( counterText );
+            }
+        }
         Item* setItem ( Item& newItem );
-        Item* popItem ( ) { Item* tempItem = item; item = nullptr; return tempItem; }
+        Item* popItem ( ) { Item* tempItem = item; item = nullptr; counter--; return tempItem; }
         bool hasItem ( ) { return item == nullptr ? false : true; };
         bool contains ( sf::Vector2f coordinates ) { return square.getGlobalBounds ( ).contains ( coordinates ); }
         sf::Vector2f getPosition ( ) { return square.getPosition ( ); }

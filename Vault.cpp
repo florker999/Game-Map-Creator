@@ -12,6 +12,8 @@ int ilosc_t{ 20 };
 Vault::Vault()
 {
 	srand(time(NULL));
+	fonts = new sf::Font[1];
+	fonts[0].loadFromFile("framd.ttf");
 	textures = new sf::Texture[ilosc_t];
 	if (!textures[0].loadFromFile("textures/trawa_1.png")	||
 		!textures[1].loadFromFile("textures/skrzynia.png")	||
@@ -99,7 +101,7 @@ sf::Texture& Vault::get ( mixture_v type )
 	{
 	case mixture_v::health:
 	default:
-		return textures[ 17 ];
+		return textures[ 16 ];
 	}
 }
 
@@ -130,6 +132,11 @@ sf::Texture& Vault::get(bool a)
 		return textures[3]; // blokada
 	else
 		return textures[4]; // dostep
+}
+
+sf::Font& Vault::getFont()
+{
+	return fonts[0];
 }
 
 sf::Texture& Vault::get(floor_v type)

@@ -9,3 +9,8 @@ Item* Item::createCopy()
 {
     return new Item(*this);
 }
+
+bool Item::operator==( const Item& compareItem )
+{
+    return false;
+}

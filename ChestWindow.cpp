@@ -105,9 +105,17 @@ Item* ChestWindow::takeOut(sf::Vector2f coordinates)
 
 Item* ChestWindow::Slot::setItem ( Item& newItem ) 
 { 
-    Item* returnItem = popItem ( );
-    item = newItem.createCopy ( ); 
-    if ( returnItem ) delete &newItem;
-    else returnItem = &newItem;
-    return returnItem;
+    if ( item && *item == newItem )
+    {
+        counter++;
+        return &newItem;
+    }
+    else
+    {
+        Item* returnItem = popItem ( );
+        item = newItem.createCopy ( );
+        if ( returnItem ) delete& newItem;
+        else returnItem = &newItem;
+        return returnItem;
+    }
 }

@@ -21,6 +21,7 @@ public:
     Item* createCopy ( );
     
     virtual action_v use ( ) { return action_v::nothing; };
+    virtual bool operator== ( const Item& compareItem );
 };
 
 #endif
