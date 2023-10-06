@@ -103,8 +103,30 @@ Item* ChestWindow::takeOut(sf::Vector2f coordinates)
     }
 }
 
-Item* ChestWindow::Slot::setItem ( Item& newItem ) 
-{ 
+inline ChestWindow::Slot::Slot ( ) { square.setSize ( sf::Vector2f{ 39, 39 } ); square.setOrigin ( 0, 39 ); counterText.setFont ( vault.getFont ( ) ); counterText.setCharacterSize ( 15 ); counterText.setFillColor ( sf::Color::White ); }
+
+inline void ChestWindow::Slot::setPosition ( sf::Vector2f coordinates ) {
+    square.setPosition ( coordinates );
+    if ( item )
+    {
+        item->setPosition ( coordinates );
+        coordinates.y -= 39;
+        counterText.setPosition ( coordinates );
+        counterText.setString ( char ( 50 + counter ) );
+    }
+}
+
+inline void ChestWindow::Slot::drawOn ( sf::RenderWindow& window )
+{
+    if ( item )
+    {
+        item->drawOn ( window );
+        window.draw ( counterText );
+    }
+}
+
+inline Item* ChestWindow::Slot::setItem ( Item& newItem )
+{
     if ( item && *item == newItem )
     {
         counter++;
@@ -119,3 +141,12 @@ Item* ChestWindow::Slot::setItem ( Item& newItem )
         return returnItem;
     }
 }
+
+inline Item* ChestWindow::Slot::popItem ( ) { Item* tempItem = item; item = nullptr; counter--; return tempItem; }
+
+inline bool ChestWindow::Slot::hasItem ( ) { return item == nullptr ? false : true; }
+
+inline bool ChestWindow::Slot::contains ( sf::Vector2f coordinates ) { return square.getGlobalBounds ( ).contains ( coordinates ); }
+
+inline sf::Vector2f ChestWindow::Slot::getPosition ( ) { return square.getPosition ( ); }
+
