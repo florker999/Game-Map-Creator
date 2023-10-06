@@ -3,6 +3,7 @@
 #include <iostream>
  
 sf::Sprite ChestWindow::window = sf::Sprite(vault.get(add_v::chest_wdw));
+char* translateDigits ( int num, int length = 1 );
 
 ChestWindow::ChestWindow (int slotsNumber) {
     slots = new Slot[9];
@@ -13,7 +14,7 @@ ChestWindow::ChestWindow(int slotsNumber, Item* newContent)
 {
     this->slotsNumber = slotsNumber;
     for (int i = 0; i < slotsNumber; i++) {
-        slots[i].setItem(newContent[i ] );
+        slots[ i ].setItem ( newContent[ i ] );
     }
 }
 
@@ -30,6 +31,7 @@ void ChestWindow::setSlotsPosition() {
         Slot* slot = slots+i;
         if (slot) {
             slot->setPosition(coordinates);
+            slot->setCounterPosition ( coordinates );
         }
         coordinates.x += 39;
         if (i % 3 == 2)
@@ -63,8 +65,8 @@ Item* ChestWindow::store( Item& newItem, sf::Vector2f coord )
 {
     Item* returnItem = &newItem;
     Slot* selectedSlot = findSlot ( coord );
-    if (selectedSlot) {
-        returnItem = selectedSlot->setItem(newItem);
+    if ( selectedSlot ) {
+        returnItem = selectedSlot->setItem ( newItem );
     }
     return returnItem;
 }
@@ -77,7 +79,6 @@ void ChestWindow::position(sf::Vector2f start)
 
 void ChestWindow::drawOn(sf::RenderWindow& window)
 {
-    position(sf::Vector2f(this->window.getPosition()));
 	window.draw(this->window);
     drawSlotsOn(window);
 }
@@ -103,6 +104,38 @@ Item* ChestWindow::takeOut(sf::Vector2f coordinates)
     }
 }
 
+char* ChestWindow::Slot::numToString ( int num )
+{
+    char* str1 = translateDigits ( num );
+    int strLen = 1;
+    while ( str1[ strLen++ ] != 0 );
+    char* str2 = new char[ strLen ];
+    for ( int i = 0; i < strLen - 1; i++ )
+    {
+        str2[ i ] = str1[ strLen - 2 - i ];
+    }
+    str2[ strLen - 1 ] = 0;
+    return str2;
+}
+
+char* translateDigits ( int num, int length )
+{
+    int digit = num % 10;
+    num = ( num - digit ) / 10;
+    if ( num == 0 )
+    {
+        char* strNum = new char[ length + 1 ];
+        strNum[ length - 1 ] = 48 + digit;
+        strNum[ length ] = 0;
+        return strNum;
+    }
+    else {
+        char* front = translateDigits ( num, length + 1 );
+        front[ length - 1 ] = 48 + digit;
+        return front;
+    }
+}
+
 inline ChestWindow::Slot::Slot ( ) { square.setSize ( sf::Vector2f{ 39, 39 } ); square.setOrigin ( 0, 39 ); counterText.setFont ( vault.getFont ( ) ); counterText.setCharacterSize ( 15 ); counterText.setFillColor ( sf::Color::White ); }
 
 inline void ChestWindow::Slot::setPosition ( sf::Vector2f coordinates ) {
@@ -114,6 +147,12 @@ inline void ChestWindow::Slot::setPosition ( sf::Vector2f coordinates ) {
         counterText.setPosition ( coordinates );
         counterText.setString ( char ( 50 + counter ) );
     }
+}
+
+void ChestWindow::Slot::setCounterPosition ( sf::Vector2f coordinates )
+{
+    coordinates.y -= 39;
+    counterText.setPosition ( coordinates );
 }
 
 inline void ChestWindow::Slot::drawOn ( sf::RenderWindow& window )
@@ -130,19 +169,21 @@ inline Item* ChestWindow::Slot::setItem ( Item& newItem )
     if ( item && *item == newItem )
     {
         counter++;
+        counterText.setString ( numToString ( counter ) );
         return &newItem;
     }
     else
     {
         Item* returnItem = popItem ( );
         item = newItem.createCopy ( );
+        counter = 1;
         if ( returnItem ) delete& newItem;
         else returnItem = &newItem;
         return returnItem;
     }
 }
 
-inline Item* ChestWindow::Slot::popItem ( ) { Item* tempItem = item; item = nullptr; counter--; return tempItem; }
+inline Item* ChestWindow::Slot::popItem ( ) { Item* tempItem = item; item = nullptr; counter = 0; return tempItem; }
 
 inline bool ChestWindow::Slot::hasItem ( ) { return item == nullptr ? false : true; }
 

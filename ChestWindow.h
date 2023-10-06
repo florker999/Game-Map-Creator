@@ -10,14 +10,18 @@
 class ChestWindow
 {
     class Slot {
+    private:
         Item* item = nullptr;
         int counter = 0;
         sf::RectangleShape square;
         sf::Text counterText;
 
+        char* numToString ( int num );
+
     public:
         Slot ( );
         void setPosition ( sf::Vector2f coordinates );
+        void setCounterPosition ( sf::Vector2f coordinates );
 
         void drawOn ( sf::RenderWindow& window );
         Item* setItem ( Item& newItem );

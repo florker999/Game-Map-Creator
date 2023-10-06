@@ -28,7 +28,7 @@ public:
     Item* clickedAt ( const sf::Vector2f& coordinates, Item* item = nullptr );
 
     void close() { isOpen = false; }
-    void open() { isOpen = true; window.setPosition(getPosition()); }
+    void open ( ) { isOpen = true; window.setPosition ( getPosition ( ) ); window.position ( getPosition ( ) ); }
     void showWindow(sf::RenderWindow& okno);
 
     bool containsChestWindow(sf::Vector2f mouseCoordinates);
